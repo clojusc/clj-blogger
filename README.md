@@ -20,17 +20,23 @@ was written against the following release of Blogger:
 
 The code layout does not match the Blogger REST API URLs. This would be a bit
 awkward for a library with so few functions and a comparatively large number
-of differing URLs (e.g., `/blogs/blogId/posts/postId/comments`, and
-`/blogs/blogId/comments`; `/users/userId/blogs`,
-`/users/userId/blogs/blogId/posts`, and `/blogs/blogId/posts`). Instead, we
-have opted for a relatively flat namespace organization and have relied upon
-code comments and sections to remove any ambiguity as to function and purpose.
-Also, we opted simply for singular nouns for all of our namespaces, again, just
-to keep things simple (allowing us to neatly avoid difficulties both semantic
-and taxonomic). Were API functionality could easily have gone in one namespace,
-but where we opted for another, we have left a "trail" (code comment) for the
-user, letting them know where to go to get what they're looking for (ah, the
-sharp corners of REST ...).
+of differing URLs. For example, see:
+
+* `/blogs/blogId/posts/postId/comments` and
+   `/blogs/blogId/comments`; or
+* `/users/userId/blogs`, `/users/userId/blogs/blogId/posts`, and
+  `/blogs/blogId/posts`).
+
+Instead, we have opted for a relatively flat namespace organization and have
+relied upon code comments and divided "sections" within namespaces to remove
+any ambiguity as to function and purpose.
+
+Also, we opted simply for singular nouns for all of our namespaces, again,
+just to keep things simple (allowing us to neatly avoid difficulties both
+semantic and taxonomic). Where API functionality could easily have gone in one
+namespace, but where we opted for another , we have left a "trail" (code
+comment) for the user, letting them know where to go to get what they're
+looking for (ah, the sharp corners of REST ...).
 
 
 ## Client
@@ -43,8 +49,8 @@ following:
  * the HTTP verb (which shows up in the Clojure API as a prefix to the function
    name, e.g. `get-posts` or `delete-post`; an exception is made for the `POST`
    HTTP verb: due to the contextual ambiguity, the `create-` prefix is used in this
-   case)
- * the resource (URL)
+   case), and
+ * the resource (URL).
 
 All clj-blogger functions take two arguments:
  1. A map of options specific to the given Blogger API resource, and
