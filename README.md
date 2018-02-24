@@ -1,14 +1,13 @@
 # clj-blogger
 
-A Clojure library designed to ... well, that part is up to you.
+*A Clojure library for the Google Blogger REST API*
 
 ## Usage
 
-FIXME
+TBD
 
 ## License
 
-Copyright © 2018 FIXME
+Copyright © 2018, Clojure-Aided Enrichment Center
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Apache License, Version 2.0.
