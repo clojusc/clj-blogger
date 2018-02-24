@@ -29,6 +29,6 @@
    :blog-user "/users/%s/blogs/%s"
    ;; PageViews Section
    :pageviews "/blogs/%s/pageviews"
-   ;; PstUserInfos Section
+   ;; PostUserInfos Section
    :post-user "/users/%s/blogs/%s/posts/%s"
    :posts-user "/users/%s/blogs/%s/posts"})
