@@ -22,19 +22,18 @@
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [
     [clj-http "3.7.0"]
-    [org.clojure/clojure "1.8.0"]]
+    [org.clojure/clojure "1.9.0"]]
   :profiles {
     :ubercompile {
       :aot :all}
     :custom-repl {
       :repl-options {
-        :init-ns dragon.dev
+        :init-ns clojusc.blogger.dev
         :prompt ~get-prompt
         :init ~(println (get-banner))}}
     :cli {}
     :dev {
       :source-paths ["dev-resources/src"]
-      :main dragon.main
       :dependencies [
         [org.clojure/tools.namespace "0.2.11"]]}
     :lint {
@@ -53,17 +52,16 @@
         :select :select}}
     :docs {
       :dependencies [
-        [codox-theme-rdash "0.1.2"]]
+        [clojang/codox-theme "0.2.0-SNAPSHOT"]]
       :plugins [
         [lein-codox "0.10.3"]
-        [lein-marginalia "0.9.1"]
-        [lein-simpleton "1.3.0"]]
+        [lein-marginalia "0.9.1"]]
       :codox {
         :project {
-          :name "Dragon"
+          :name "clj-blogger"
           :description "Customised, Stasis-based Static Site Generator"}
         :namespaces [#"^dragon\.(?!dev)"]
-        :themes [:rdash]
+        :themes [:clojang]
         :output-path "docs/current"
         :doc-paths ["resources/docs"]
         :metadata {

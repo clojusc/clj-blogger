@@ -52,6 +52,14 @@ All clj-blogger functions take two arguments:
     the HTTP client behaviour.
 
 
+## Documentation
+
+Versioned Clojure client documentation is available here:
+
+* [API Reference][api-docs]
+* [Marginalia][margin-docs]
+
+
 ## Usage
 
 From the above notes (and a quick look at the source code), it should be fairly
@@ -83,3 +91,5 @@ Distributed under the Apache License, Version 2.0.
 [jdk-v]: https://img.shields.io/badge/jdk-1.7+-blue.svg
 [clojars]: https://clojars.org/clj-blogger
 [clojars-badge]: https://img.shields.io/clojars/v/clj-blogger.svg
+[api-docs]: http://clojusc.github.io/clj-blogger/current/
+[margin-docs]: http://clojusc.github.io/clj-blogger/current/marginalia.html
