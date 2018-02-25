@@ -1,7 +1,9 @@
 (ns clojusc.blogger.api)
 
 (defrecord BloggerClient
-  [blog-id
+  [creds-file
+   config-file
+   blog-id
    post-id
    user-id])
 
