@@ -1,11 +1,12 @@
-(ns clojusc.blogger.api.core)
+(ns clojusc.blogger.api.core
+  (:require
+    [clojusc.blogger.util :as util]))
 
 (defrecord BloggerClient
   [creds-file
+   creds
    config-file
-   blog-id
-   post-id
-   user-id])
+   config])
 
 (defprotocol BloggerAPI
   ;;--  Blogs Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -105,4 +106,8 @@
   ([]
     (create-client {}))
   ([opts]
-    (map->BloggerClient opts)))
+    (map->BloggerClient
+     (assoc opts :config (merge
+                          (util/read-json (:config-file opts))
+                          opts)
+                 :creds (util/read-json (:creds-file opts))))))
