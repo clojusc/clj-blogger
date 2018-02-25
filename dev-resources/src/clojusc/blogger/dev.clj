@@ -2,6 +2,7 @@
   (:require
     [cheshire.core :as json]
     [clj-oauth2.client :as oauth2]
+    [clojusc.blogger.api.core :as api]
     [clojusc.blogger.api.impl.blog :as blog]
     [clojusc.blogger.api.impl.comment :as comment]
     [clojusc.blogger.api.impl.page :as page]
