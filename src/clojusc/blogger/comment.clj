@@ -1,2 +1,0 @@
-(ns clojusc.blogger.comment)
-

@@ -1,4 +1,4 @@
-(ns clojusc.blogger.api)
+(ns clojusc.blogger.api.core)
 
 (defrecord BloggerClient
   [creds-file
