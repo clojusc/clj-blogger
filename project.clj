@@ -23,7 +23,8 @@
   :dependencies [
     [cheshire "5.8.0"]
     [clj-http "3.7.0"]
-    [org.clojure/clojure "1.9.0"]]
+    [org.clojure/clojure "1.9.0"]
+    [stuarth/clj-oauth2 "0.3.2"]]
   :profiles {
     :ubercompile {
       :aot :all}
