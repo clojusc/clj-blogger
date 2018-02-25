@@ -16,27 +16,31 @@ was written against the following release of Blogger:
  * https://developers.google.com/blogger/docs/3.0/reference/
 
 
+## Google Authentication
+
+Because this library utilizes protected Google resources, you will need to
+[set up access with Google][oauth2-setup]. Their site and docs change
+regularly, but look in their APIs & Services section for where you can create
+credentials -- in particular, creating an OAuth client ID. Once created, there
+will be an option to download in JSON format -- do so. Save this to a file
+(e.g., `~/.google/blog-publisher-oauth2-creds.json`); you will use it when
+creating a client.
+
+
+## Configuration
+
+Instead of remembering you enter you Google blog ID every time you want to
+publish content, you can create a JSON configuration file that contains an
+associative array with the key `blog-id` and whose value is the blog ID of
+the blog with which you want to work.
+
+
 ## Layout
 
-The code layout does not match the Blogger REST API URLs. This would be a bit
-awkward for a library with so few functions and a comparatively large number
-of differing URLs. For example, see:
-
-* `/blogs/blogId/posts/postId/comments` and
-   `/blogs/blogId/comments`; or
-* `/users/userId/blogs`, `/users/userId/blogs/blogId/posts`, and
-  `/blogs/blogId/posts`).
-
-Instead, we have opted for a relatively flat namespace organization and have
-relied upon code comments and divided "sections" within namespaces to remove
-any ambiguity as to function and purpose.
-
-Also, we opted simply for singular nouns for all of our namespaces, again,
-just to keep things simple (allowing us to neatly avoid difficulties both
-semantic and taxonomic). Where API functionality could easily have gone in one
-namespace, but where we opted for another , we have left a "trail" (code
-comment) for the user, letting them know where to go to get what they're
-looking for (ah, the sharp corners of REST ...).
+The code layout does not match the Blogger REST API URLs. However, since none of
+the function names overlap, a flat namespace is provided for all API calls:
+`clojusc.blogger.api`. The implementations for the protocol defined there are
+provided in sensible library namespaces.
 
 
 ## Client
@@ -99,3 +103,4 @@ Distributed under the Apache License, Version 2.0.
 [clojars-badge]: https://img.shields.io/clojars/v/clj-blogger.svg
 [api-docs]: http://clojusc.github.io/clj-blogger/current/
 [margin-docs]: http://clojusc.github.io/clj-blogger/current/marginalia.html
+[oauth2-setup]: XXX
