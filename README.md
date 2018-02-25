@@ -19,12 +19,10 @@ was written against the following release of Blogger:
 ## Google Authentication
 
 Because this library utilizes protected Google resources, you will need to
-[set up access with Google][oauth2-setup]. Their site and docs change
-regularly, but look in their APIs & Services section for where you can create
-credentials -- in particular, creating an OAuth client ID. Once created, there
-will be an option to download in JSON format -- do so. Save this to a file
-(e.g., `~/.google/blog-publisher-oauth2-creds.json`); you will use it when
-creating a client.
+[set up access with Google][oauth2-setup]. Once created, there
+will be an option to download your OAuth2 credential data in JSON format --
+do so. Save this to a file (e.g., `~/.google/blog-publisher-oauth2-creds.json`);
+you will use it when creating a client.
 
 
 ## Configuration
@@ -103,4 +101,4 @@ Distributed under the Apache License, Version 2.0.
 [clojars-badge]: https://img.shields.io/clojars/v/clj-blogger.svg
 [api-docs]: http://clojusc.github.io/clj-blogger/current/
 [margin-docs]: http://clojusc.github.io/clj-blogger/current/marginalia.html
-[oauth2-setup]: XXX
+[oauth2-setup]: https://developers.google.com/blogger/docs/3.0/using
