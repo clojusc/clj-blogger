@@ -1,12 +1,15 @@
 (ns clojusc.blogger.api.core
   (:require
+    [clojusc.blogger.api.impl.blog :as blog]
+    [clojusc.blogger.auth :as auth]
     [clojusc.blogger.util :as util]))
 
 (defrecord BloggerClient
-  [creds-file
-   creds
+  [endpoint
    config-file
-   config])
+   creds-file
+   defaults
+   token])
 
 (defprotocol BloggerAPI
   ;;--  Blogs Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -98,6 +101,10 @@
     rights, specific to the user. Requires `:user-id` and `:blog-id` `:post-id`
     be provided in the `args` map."))
 
+(extend BloggerClient
+        BloggerAPI
+        blog/behaviour)
+
 (defn create-client
   "Constructor for the Blogger client. Optionally takes a map that may contain
   any of the `:blog-id`, `:post-id`, or `:user-id` keys and associated values.
@@ -106,8 +113,7 @@
   ([]
     (create-client {}))
   ([opts]
-    (map->BloggerClient
-     (assoc opts :config (merge
-                          (util/read-json (:config-file opts))
-                          opts)
-                 :creds (util/read-json (:creds-file opts))))))
+    (let [client (map->BloggerClient opts)]
+      (assoc client :endpoint "https://www.googleapis.com/blogger/v3"
+                    :defaults (util/read-json (:config-file opts))
+                    :token (auth/get-token client)))))
