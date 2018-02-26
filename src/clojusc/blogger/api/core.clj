@@ -12,14 +12,18 @@
    token])
 
 (defprotocol BloggerAPI
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Blogs Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-blog [this] [this args] [this args httpc-opts]
     "Retrieves a blog. Either a `:blog-id` or a `:url` needs to be
     provided in the `args` map.")
   (get-blogs [this] [this args] [this args httpc-opts]
     "Retrieves a list of blogs. Requires `:user-id` be provided in the `args`
     map.")
+  ;;------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Comments Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-comments [this] [this args] [this args httpc-opts]
     "Retrieves comments. Requires `:blog-id` be provided in the `args` map. If
     a `:post-id` is also provided, returns just the comments for that post. If
@@ -40,7 +44,9 @@
   (remove-comment-content [this] [this args] [this args httpc-opts]
     "Removes the content of a comment. Requires `:blog-id`, `:post-id`, and
     `:comment-id` be provided in the `args` map.")
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Pages Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-pages [this] [this args] [this args httpc-opts]
     "Retrieves the list of pages for a blog. Requires `:blog-id` be provided
     in the `args` map.")
@@ -54,7 +60,9 @@
     "Adds a page. Requires `:blog-id` be provided in the `args` map.")
   (update-page [this] [this args] [this args httpc-opts]
     "Updates a page. `:blog-id` and `:page-id` be provided in the `args` map.")
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Posts Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-posts [this] [this args] [this args httpc-opts]
     "Retrieves a list of posts. Requires `:blog-id` be provided in the `args`
     map.")
@@ -80,18 +88,26 @@
   (unpublish-post [this] [this args] [this args httpc-opts]
     "Moves a post back to the draft state. Requires `:blog-id` and `:post-id`
     be provided in the `args` map.")
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Users Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-user [this] [this args] [this args httpc-opts]
     "Retrieves a user. Requires `:user-id` be provided in the `args` map.")
+  ;;-----------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  BlogUserInfos Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;-----------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-user-blog [this] [this args] [this args httpc-opts]
     "Gets one blog and user info pair. Requires `:user-id` and `:blog-id` be
     provided in the `args` map.")
+  ;;-------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  PageViews Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;-------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-pageviews [this] [this args] [this args httpc-opts]
     "Retrieve pageview stats for a Blog. Requires `:blog-id` be provided in the
     `args` map.")
+  ;;-----------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  PostUserInfos Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;-----------------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (get-user-post [this] [this args] [this args httpc-opts]
     "Gets one post and user info pair. Requires `:user-id`, `:blog-id`, and
     `:post-id` be provided in the `args` map.")
