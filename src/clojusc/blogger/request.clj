@@ -19,8 +19,7 @@
 
 (defn add-query-items
   [args use-keys http-opts]
-  (assoc http-opts :query-params (merge (:query-params http-opts)
-                                        (select-keys args use-keys))))
+  (update-in http-opts [:query-params] merge (select-keys args use-keys)))
 
 (defn add-debugging
   [http-opts]

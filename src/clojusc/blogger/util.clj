@@ -34,8 +34,7 @@
 
 (defn str->bytes
   [string-data]
-  (->> string-data
-       (map (comp byte int))))
+  (map (comp byte int) string-data))
 
 (defn str->byte-array
   [string-data]
