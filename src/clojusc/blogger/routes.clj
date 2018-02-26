@@ -32,3 +32,12 @@
    ;; PostUserInfos Section
    :post-user "/users/%s/blogs/%s/posts/%s"
    :posts-user "/users/%s/blogs/%s/posts"})
+
+(defn get-url
+  ([client route-key]
+    (str (:endpoint client) (route-key resource-paths)))
+  ([client route-key args arg-keys]
+   (apply format
+          (concat
+           [(str (:endpoint client) (route-key resource-paths))]
+           (map args arg-keys)))))

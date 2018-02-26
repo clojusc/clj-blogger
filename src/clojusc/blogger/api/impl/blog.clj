@@ -1,12 +1,10 @@
 (ns clojusc.blogger.api.impl.blog
   (:require
-    [clj-http.client :as httpc]
-    [clojusc.blogger.auth :as auth]
     [clojusc.blogger.request :as request]
     [clojusc.blogger.routes :as routes]
     [clojusc.blogger.util :as util]))
 
-(defn- get-blog-by-path
+(defn- blog-path
   [args]
   (if (:url args)
     (:blog-by-url routes/resource-paths)
@@ -19,12 +17,15 @@
     (get-blog this args {}))
   ([this args httpc-opts]
     (let [args (util/get-args this args)]
-      (:body
-       (httpc/get
-        (request/get-url this (get-blog-by-path args))
-        (->> httpc-opts
-             (request/add-token this)
-             (request/add-as-json)))))))
+      (if (:url args)
+        (request/get
+         (routes/get-url this :blog-by-url)
+         (->> httpc-opts
+              (request/add-default-opts this)
+              (request/add-query-items args [:url])))
+        (request/get
+         (routes/get-url this :blog-by-id args [:blog-id])
+         (request/add-default-opts this httpc-opts))))))
 
 (defn get-blogs
   ([this]
@@ -32,7 +33,7 @@
   ([this args]
     (get-blogs this args {}))
   ([this args httpc-opts]
-    ))
+    :not-implemented))
 
 (def behaviour
   {:get-blog get-blog

@@ -1,10 +1,13 @@
 (ns clojusc.blogger.request
   (:require
-    [clojure.string :as string]))
+    [clj-http.client :as httpc]
+    [clojure.string :as string])
+  (:refer-clojure :exclude [get]))
 
-(defn get-url
-  [client resource-path]
-  (str (:endpoint client) resource-path))
+(def delete (comp :body #'httpc/delete))
+(def get (comp :body #'httpc/get))
+(def post (comp :body #'httpc/post))
+(def put (comp :body #'httpc/put))
 
 (defn add-as-json
   [http-opts]
@@ -24,3 +27,9 @@
   (assoc http-opts :throw-entire-message? true
                    :debug true
                    :debug-body true))
+
+(defn add-default-opts
+  [client http-opts]
+  (->> http-opts
+       (add-token client)
+       add-as-json))
