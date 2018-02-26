@@ -19,26 +19,38 @@ was written against the following release of Blogger:
 ## Google Authentication
 
 Because this library utilizes protected Google resources, you will need to
-[set up access with Google][oauth2-setup]. Once created, there
-will be an option to download your OAuth2 credential data in JSON format --
-do so. Save this to a file (e.g., `~/.google/blog-publisher-oauth2-creds.json`);
-you will use it when creating a client.
+[set up OAuth2 access with Google][oauth2-setup]; note that this library only
+supports using service accounts (thus avoiding the need to introduce a web
+browser into the mix).
+
+Once created, there will be an option to download your OAuth2 credential data
+in JSON format -- do so. Save this to a file (e.g.,
+`~/.google/blog-publisher-oauth2-creds.json`); you will use it when creating a
+client (see below).
 
 
 ## Configuration
 
-Instead of remembering you enter you Google blog ID every time you want to
+Instead of remembering to enter your Google blog ID every time you want to
 publish content, you can create a JSON configuration file that contains an
 associative array with the key `blog-id` and whose value is the blog ID of
 the blog with which you want to work.
 
+Note that if you will be repeatedly operating on Blogger resources with the
+same `user-id`, `page-id`, or `post-id`, you may make those entries in the
+config file as well, and they will be used on all appropriate requests.
+
+You can save this to a file like `~/.google/blog.json` and use it when
+creating a client (see below).
+
 
 ## Layout
 
-The code layout does not match the Blogger REST API URLs. However, since none of
-the function names overlap, a flat namespace is provided for all API calls:
-`clojusc.blogger.api`. The implementations for the protocol defined there are
-provided in sensible library namespaces.
+Note that the code layout for this project does not match the Blogger REST API
+URLs. However, since none of the function names collide, a flat namespace is
+provided for all API calls: `clojusc.blogger.api`. The implementations for the
+protocol defined there are provided in sensible library namespaces under
+`clojusc.blogger.api.impl.*`.
 
 
 ## Client
@@ -54,10 +66,21 @@ following:
    case), and
  * the resource (URL).
 
-All clj-blogger functions take two arguments:
- 1. A map of options specific to the given Blogger API resource, and
+All clj-blogger functions take one to three arguments:
+ 1. The client record (required)
+ 1. A map of options specific to the given Blogger API resource (optional if these
+    have been provided in a configuration file), and
  1. A map of options to pass to clj-http, allowing you complete control over
-    the HTTP client behaviour.
+    the HTTP client behaviour (optional).
+
+To create a new client:
+
+```clj
+(requre '[clojusc.blogger.api.core :as api])
+
+(def c (api/create-client {:creds-file "creds.json"
+                           :config-file "blog.json"}))
+```
 
 
 ## Documentation
@@ -71,10 +94,16 @@ Versioned Clojure client documentation is available here:
 ## Usage
 
 From the above notes (and a quick look at the source code), it should be fairly
-clear how to use the API:
+clear how to use the API. First, create a client as indicated above, then:
 
 ```
-TBD
+(api/get-blog c {:blog-id "2632822713760719202"})
+```
+
+You can also pass options to clj-http:
+
+```
+(api/get-blog c {:blog-id "2632822713760719202"} {:debug true})
 ```
 
 

@@ -21,10 +21,10 @@
     :name "Apache License, Version 2.0"
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [
+    [buddy/buddy-sign "2.2.0"]
     [cheshire "5.8.0"]
     [clj-http "3.7.0"]
-    [org.clojure/clojure "1.9.0"]
-    [stuarth/clj-oauth2 "0.3.2"]]
+    [org.clojure/clojure "1.9.0"]]
   :profiles {
     :ubercompile {
       :aot :all}
