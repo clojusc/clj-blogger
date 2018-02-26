@@ -1,6 +1,7 @@
 (ns clojusc.blogger.api.core
   (:require
     [clojusc.blogger.api.impl.blog :as blog]
+    [clojusc.blogger.api.impl.post :as post]
     [clojusc.blogger.auth :as auth]
     [clojusc.blogger.util :as util]))
 
@@ -119,7 +120,8 @@
 
 (extend BloggerClient
         BloggerAPI
-        blog/behaviour)
+        (merge blog/behaviour
+               post/behaviour))
 
 (defn create-client
   "Constructor for the Blogger client. Optionally takes a map that may contain
