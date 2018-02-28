@@ -5,7 +5,7 @@
   {;; Blogs Section
    :blog-by-id "/blogs/%s"
    :blog-by-url "/blogs/byurl"
-   :blogs-by-user "/users/%s/blogs"
+   :pageviews "/blogs/%s/pageviews"
    ;; Comments Section
    :comments-all "/blogs/%s/comments"
    :comments-post "/blogs/%s/posts/%s/comments"
@@ -25,11 +25,8 @@
    :post-revert "/blogs/%s/posts/%s/revert"
    ;; Users Section
    :user "/users/%s"
-   ;; BlogUserInfos Section
    :blog-user "/users/%s/blogs/%s"
-   ;; PageViews Section
-   :pageviews "/blogs/%s/pageviews"
-   ;; PostUserInfos Section
+   :blogs-by-user "/users/%s/blogs"
    :post-user "/users/%s/blogs/%s/posts/%s"
    :posts-user "/users/%s/blogs/%s/posts"})
 
