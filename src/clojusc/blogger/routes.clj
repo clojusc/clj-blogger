@@ -5,7 +5,7 @@
   {;; Blogs Section
    :blog-by-id "/blogs/%s"
    :blog-by-url "/blogs/byurl"
-   :pageviews "/blogs/%s/pageviews"
+   :blog-pageviews "/blogs/%s/pageviews"
    ;; Comments Section
    :comments-all "/blogs/%s/comments"
    :comments-post "/blogs/%s/posts/%s/comments"
@@ -33,8 +33,8 @@
 (defn get-url
   ([client route-key]
     (str (:endpoint client) (route-key resource-paths)))
-  ([client route-key args arg-keys]
+  ([client route-key args]
    (apply format
           (concat
            [(str (:endpoint client) (route-key resource-paths))]
-           (map args arg-keys)))))
+           args))))
