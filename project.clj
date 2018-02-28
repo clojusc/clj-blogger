@@ -90,7 +90,7 @@
       ["codox"]
       ["marg" "--dir" "docs/current"
               "--file" "marginalia.html"
-              "--name" "sockets"]]
+              "--name" "clj-blogger"]]
     "build" ["with-profile" "+test" "do"
       ;["check-deps"]
       ["lint"]
