@@ -20,8 +20,10 @@
 (def creds-file (str config-dir "/blog-publisher-svc-creds.json"))
 (def config-file (str config-dir "/blog.json"))
 
-(if (and (.exists (io/file creds-file))
-           (.exists (io/file config-file)))
-  (def client (api/create-client {:creds-file creds-file
-                                  :config-file config-file}))
-  (def client nil))
+(defn get-default-client
+  []
+  (if (and (.exists (io/file creds-file))
+             (.exists (io/file config-file)))
+    (api/create-client {:creds-file creds-file
+                        :config-file config-file})
+    (api/create-client)))
