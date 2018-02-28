@@ -8,7 +8,9 @@
     [clojusc.blogger.util :as util]))
 
 (def oauth2-grant-type "urn:ietf:params:oauth:grant-type:jwt-bearer")
-(def oauth2-scope "https://www.googleapis.com/auth/blogger")
+(def analytics-scope "https://www.googleapis.com/auth/analytics")
+(def blogger-scope "https://www.googleapis.com/auth/blogger")
+(def scopes [blogger-scope])
 (def token-endpoint "https://www.googleapis.com/oauth2/v4/token")
 
 (defn get-creds
@@ -37,7 +39,7 @@
   (let [now (util/get-epoch-time)
         expire (+ now (* 59 60))]
     {:iss (:client_email creds)
-     :scope oauth2-scope
+     :scope (string/join " " scopes)
      :aud token-endpoint
      :exp expire
      :iat now}))
