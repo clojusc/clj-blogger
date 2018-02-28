@@ -12,7 +12,7 @@
   ([this args httpc-opts]
     (let [{blog-id :blog-id :as args} (util/get-args this args)]
       (request/get
-       (routes/get-url this :posts-all args [:blog-id])
+       (routes/get-url this :posts-all [blog-id])
        (request/add-default-opts this args httpc-opts)))))
 
 (def behaviour
