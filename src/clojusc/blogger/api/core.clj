@@ -122,7 +122,10 @@
 (extend BloggerClient
         BloggerAPI
         (merge blog/behaviour
-               post/behaviour))
+               comment/behaviour
+               page/behaviour
+               post/behaviour
+               user/behaviour))
 
 (defn create-client
   "Constructor for the Blogger client. Optionally takes a map that may contain
