@@ -2,6 +2,7 @@
   (:require
     [cheshire.core :as json]
     [clj-http.client :as httpc]
+    [clojure.java.io :as io]
     [clojure.tools.namespace.repl :refer [refresh]]
     [clojusc.blogger.api.core :as api]
     [clojusc.blogger.api.impl.blog :as blog]
@@ -18,5 +19,9 @@
 (def config-dir (str home "/.google/starship-tools"))
 (def creds-file (str config-dir "/blog-publisher-svc-creds.json"))
 (def config-file (str config-dir "/blog.json"))
-(def c (api/create-client {:creds-file creds-file
-                           :config-file config-file}))
+
+(if (and (.exists (io/file creds-file))
+           (.exists (io/file config-file)))
+  (def client (api/create-client {:creds-file creds-file
+                                  :config-file config-file}))
+  (def client nil))
