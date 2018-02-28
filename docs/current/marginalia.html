@@ -2873,8 +2873,13 @@ net.brehaut.ClojureTools = (function (SH) {
     [cheshire.core :as json]
     [clj-http.client :as httpc]
     [clojure.string :as string]
+    [clojusc.blogger.request :as request]
     [clojusc.blogger.util :as util]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def token-url &quot;https://www.googleapis.com/oauth2/v4/token&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def oauth2-grant-type &quot;urn:ietf:params:oauth:grant-type:jwt-bearer&quot;)
+(def analytics-scope &quot;https://www.googleapis.com/auth/analytics&quot;)
+(def blogger-scope &quot;https://www.googleapis.com/auth/blogger&quot;)
+(def scopes [blogger-scope])
+(def token-endpoint &quot;https://www.googleapis.com/oauth2/v4/token&quot;)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn get-creds
   [client]
   (util/read-json (:creds-file client)))</pre></td></tr><tr><td class="docs">
@@ -2897,8 +2902,8 @@ net.brehaut.ClojureTools = (function (SH) {
   (let [now (util/get-epoch-time)
         expire (+ now (* 59 60))]
     {:iss (:client_email creds)
-     :scope &quot;https://www.googleapis.com/auth/blogger&quot;
-     :aud &quot;https://www.googleapis.com/oauth2/v4/token&quot;
+     :scope (string/join &quot; &quot; scopes)
+     :aud token-endpoint
      :exp expire
      :iat now}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn jwt-claim-set
@@ -2922,20 +2927,25 @@ net.brehaut.ClojureTools = (function (SH) {
         claim-set (jwt-claim-set creds)
         signature (jwt-signature creds header claim-set)]
     (string/join &quot;.&quot; [header claim-set signature])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-debug
+  [client opts]
+  (merge
+    (if (:debug client)
+      {:throw-entire-message? true
+       :debug true
+       :debug-body true}
+      {})
+    opts))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn get-token
   [client]
   (let [creds (get-creds client)
-        grant-type &quot;urn:ietf:params:oauth:grant-type:jwt-bearer&quot;
         jwt (create-jwt creds)]
-    (-&gt;&gt; {:form-params
-          {:grant_type grant-type
-           :assertion jwt}
-          ; :throw-entire-message? true
-          ; :debug true
-          ; :debug-body true
-          :as :json}
-         (httpc/post token-url)
-         :body
+    (-&gt;&gt; {:as :json
+          :form-params
+           {:grant_type oauth2-grant-type
+            :assertion jwt}}
+         (add-debug client)
+         (request/post token-endpoint)
          :access_token)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn update-token
   [client]
@@ -3005,7 +3015,7 @@ net.brehaut.ClojureTools = (function (SH) {
   {;; Blogs Section
    :blog-by-id &quot;/blogs/%s&quot;
    :blog-by-url &quot;/blogs/byurl&quot;
-   :blogs-by-user &quot;/users/%s/blogs&quot;
+   :blog-pageviews &quot;/blogs/%s/pageviews&quot;
    ;; Comments Section
    :comments-all &quot;/blogs/%s/comments&quot;
    :comments-post &quot;/blogs/%s/posts/%s/comments&quot;
@@ -3025,22 +3035,28 @@ net.brehaut.ClojureTools = (function (SH) {
    :post-revert &quot;/blogs/%s/posts/%s/revert&quot;
    ;; Users Section
    :user &quot;/users/%s&quot;
-   ;; BlogUserInfos Section
    :blog-user &quot;/users/%s/blogs/%s&quot;
-   ;; PageViews Section
-   :pageviews &quot;/blogs/%s/pageviews&quot;
-   ;; PostUserInfos Section
+   :blogs-by-user &quot;/users/%s/blogs&quot;
    :post-user &quot;/users/%s/blogs/%s/posts/%s&quot;
    :posts-user &quot;/users/%s/blogs/%s/posts&quot;})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn get-url
   ([client route-key]
     (str (:endpoint client) (route-key resource-paths)))
-  ([client route-key args arg-keys]
+  ([client route-key args]
    (apply format
           (concat
            [(str (:endpoint client) (route-key resource-paths))]
-           (map args arg-keys)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.user" name="clojusc.blogger.api.impl.user"><h1 class="project-name">clojusc.blogger.api.impl.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.user)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.post" name="clojusc.blogger.api.impl.post"><h1 class="project-name">clojusc.blogger.api.impl.post</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+           args))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.user" name="clojusc.blogger.api.impl.user"><h1 class="project-name">clojusc.blogger.api.impl.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.user)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-blogs
+  ([this]
+    (get-blogs this {}))
+  ([this args]
+    (get-blogs this args {}))
+  ([this args httpc-opts]
+    :not-implemented))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def behaviour
+  {:get-blogs get-blogs})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.post" name="clojusc.blogger.api.impl.post"><h1 class="project-name">clojusc.blogger.api.impl.post</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.post
   (:require
     [clojusc.blogger.request :as request]
@@ -3052,10 +3068,10 @@ net.brehaut.ClojureTools = (function (SH) {
   ([this args]
     (get-posts this args {}))
   ([this args httpc-opts]
-    (let [args (util/get-args this args)]
+    (let [{blog-id :blog-id :as args} (util/get-args this args)]
       (request/get
-       (routes/get-url this :posts-all args [:blog-id])
-       (request/add-default-opts this httpc-opts)))))</pre></td></tr><tr><td class="docs">
+       (routes/get-url this :posts-all [blog-id])
+       (request/add-default-opts this args httpc-opts)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def behaviour
   {:get-posts get-posts})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.blog" name="clojusc.blogger.api.impl.blog"><h1 class="project-name">clojusc.blogger.api.impl.blog</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.blog
@@ -3074,32 +3090,44 @@ net.brehaut.ClojureTools = (function (SH) {
   ([this args]
     (get-blog this args {}))
   ([this args httpc-opts]
-    (let [args (util/get-args this args)]
-      (if (:url args)
+    (let [{:keys [blog-id url] :as args} (util/get-args this args)]
+      (if url
         (request/get
          (routes/get-url this :blog-by-url)
          (-&gt;&gt; httpc-opts
-              (request/add-default-opts this)
+              (request/add-default-opts this args)
               (request/add-query-items args [:url])))
         (request/get
-         (routes/get-url this :blog-by-id args [:blog-id])
-         (request/add-default-opts this httpc-opts))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn get-blogs
+         (routes/get-url this :blog-by-id [blog-id])
+         (request/add-default-opts this args httpc-opts))))))</pre></td></tr><tr><td class="docs"><p>Looking for get-blogs? see the <code>impl.user</code> namespace, since getting
+all blogs actually a function of the user.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-pageviews
   ([this]
-    (get-blogs this {}))
+    (get-pageviews this {}))
   ([this args]
-    (get-blogs this args {}))
+    (get-pageviews this args {}))
   ([this args httpc-opts]
-    :not-implemented))</pre></td></tr><tr><td class="docs">
+    (let [{blog-id :blog-id :as args} (util/get-args this args)]
+      (request/get
+       (routes/get-url this :blog-pageviews [blog-id])
+       (request/add-default-opts this args httpc-opts)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def behaviour
   {:get-blog get-blog
-   :get-blogs get-blogs})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.comment" name="clojusc.blogger.api.impl.comment"><h1 class="project-name">clojusc.blogger.api.impl.comment</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.comment)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.page" name="clojusc.blogger.api.impl.page"><h1 class="project-name">clojusc.blogger.api.impl.page</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.page)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.core" name="clojusc.blogger.api.core"><h1 class="project-name">clojusc.blogger.api.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+   :get-pageviews get-pageviews})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.comment" name="clojusc.blogger.api.impl.comment"><h1 class="project-name">clojusc.blogger.api.impl.comment</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.comment)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def behaviour
+  {})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.impl.page" name="clojusc.blogger.api.impl.page"><h1 class="project-name">clojusc.blogger.api.impl.page</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.impl.page)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def behaviour
+  {})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.api.core" name="clojusc.blogger.api.core"><h1 class="project-name">clojusc.blogger.api.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.api.core
   (:require
     [clojusc.blogger.api.impl.blog :as blog]
+    [clojusc.blogger.api.impl.comment :as comment]
+    [clojusc.blogger.api.impl.page :as page]
     [clojusc.blogger.api.impl.post :as post]
+    [clojusc.blogger.api.impl.user :as user]
     [clojusc.blogger.auth :as auth]
     [clojusc.blogger.util :as util]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defrecord BloggerClient
@@ -3107,7 +3135,8 @@ net.brehaut.ClojureTools = (function (SH) {
    config-file
    creds-file
    defaults
-   token])</pre></td></tr><tr><td class="docs">
+   token
+   debug])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defprotocol BloggerAPI
   ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;--  Blogs Section  --;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3216,7 +3245,10 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(extend BloggerClient
         BloggerAPI
         (merge blog/behaviour
-               post/behaviour))</pre></td></tr><tr><td class="docs"><p>Constructor for the Blogger client. Optionally takes a map that may contain
+               comment/behaviour
+               page/behaviour
+               post/behaviour
+               user/behaviour))</pre></td></tr><tr><td class="docs"><p>Constructor for the Blogger client. Optionally takes a map that may contain
   any of the <code>:blog-id</code>, <code>:post-id</code>, or <code>:user-id</code> keys and associated values.
   Values of these keys will be used in API calls if the call itself does not
   provide them.</p>
@@ -3230,13 +3262,32 @@ net.brehaut.ClojureTools = (function (SH) {
                     :token (auth/get-token client)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.request" name="clojusc.blogger.request"><h1 class="project-name">clojusc.blogger.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.request
   (:require
+    [cheshire.core :as json]
     [clj-http.client :as httpc]
+    [clojure.pprint :refer [pprint]]
     [clojure.string :as string])
   (:refer-clojure :exclude [get]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def delete (comp :body #'httpc/delete))
-(def get (comp :body #'httpc/get))
-(def post (comp :body #'httpc/post))
-(def put (comp :body #'httpc/put))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *print-errors* false)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn json-&gt;clj
+  [data]
+  (if (string? data)
+    (json/parse-string data true)
+    data))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn show-error
+  [data]
+  (if (and *print-errors* (:error data))
+    (do
+      (pprint data)
+      :error)
+    data))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def delete (comp show-error json-&gt;clj :body #'httpc/delete))
+(def get (comp show-error json-&gt;clj :body #'httpc/get))
+(def patch (comp show-error json-&gt;clj :body #'httpc/patch))
+(def post (comp show-error json-&gt;clj :body #'httpc/post))
+(def put (comp show-error json-&gt;clj :body #'httpc/put))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-no-exceptions
+  [http-opts]
+  (assoc http-opts :throw-exceptions false))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn add-as-json
   [http-opts]
   (assoc http-opts :as :json))</pre></td></tr><tr><td class="docs">
@@ -3249,13 +3300,21 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn add-debugging
   [http-opts]
   (assoc http-opts :throw-entire-message? true
+                   :throw-exceptions true
                    :debug true
                    :debug-body true))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-common-params
+  [args http-opts]
+  (if (:fields args)
+    (add-query-items args [:fields] http-opts)
+    http-opts))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn add-default-opts
-  [client http-opts]
+  [client args http-opts]
   (-&gt;&gt; http-opts
        (add-token client)
-       add-as-json))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_clojusc.blogger.auth">clojusc.blogger.auth</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.util">clojusc.blogger.util</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.routes">clojusc.blogger.routes</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.user">clojusc.blogger.api.impl.user</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.post">clojusc.blogger.api.impl.post</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.blog">clojusc.blogger.api.impl.blog</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.comment">clojusc.blogger.api.impl.comment</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.page">clojusc.blogger.api.impl.page</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.core">clojusc.blogger.api.core</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.request">clojusc.blogger.request</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+       add-no-exceptions
+       add-as-json
+       (add-common-params args)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_clojusc.blogger.auth">clojusc.blogger.auth</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.util">clojusc.blogger.util</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.routes">clojusc.blogger.routes</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.user">clojusc.blogger.api.impl.user</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.post">clojusc.blogger.api.impl.post</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.blog">clojusc.blogger.api.impl.blog</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.comment">clojusc.blogger.api.impl.comment</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.impl.page">clojusc.blogger.api.impl.page</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.api.core">clojusc.blogger.api.core</li><li class="floating-toc-li" id="floating-toc_clojusc.blogger.request">clojusc.blogger.request</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

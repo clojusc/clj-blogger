@@ -62,6 +62,8 @@ see added, feel free to open a ticket or even submit a pull request :-)
 Here are the API functions that have been implemented:
 
 * `get-blog`
+* `get-pageviews`
+* `get-posts`
 
 These are the ones remaining:
 
@@ -70,7 +72,7 @@ These are the ones remaining:
 * `get-comments`
 * `approve-comment`
 * `delete-comment`
-* `spam-comment`
+* `spam-comment` (rename to `hide-spam-comment`?)
 * `remove-comment-content`
 * `get-page`
 * `get-pages`
@@ -78,7 +80,6 @@ These are the ones remaining:
 * `delete-page`
 * `update-page`
 * `get-post`
-* `get-posts`
 * `search`
 * `add-post`
 * `delete-post`
@@ -87,7 +88,6 @@ These are the ones remaining:
 * `unpublish-post`
 * `get-user`
 * `get-user-blog`
-* `get-pageviews`
 * `get-user-post`
 * `get-user-posts`
 
@@ -131,14 +131,25 @@ clear how to use the API. First, create a client:
 ```
 
 
-```
+```clj
 (api/get-blog c {:blog-id "2632822713760719202"})
 ```
 
 You can also pass options to clj-http:
 
-```
+```clj
 (api/get-blog c {:blog-id "2632822713760719202"} {:debug true})
+```
+
+
+### Partial Responses
+
+clj-blogger supports asking the API for just a subset of the response data.
+Simply pass the `:fields` option (per the [API partial response spec][part-resp])
+For instance, if you'd only like to see the titles of all posts:
+
+```clj
+(api/get-posts c {:fields ["items(title)"]})
 ```
 
 
@@ -166,3 +177,4 @@ Distributed under the Apache License, Version 2.0.
 [api-docs]: http://clojusc.github.io/clj-blogger/current/
 [margin-docs]: http://clojusc.github.io/clj-blogger/current/marginalia.html
 [oauth2-setup]: https://developers.google.com/blogger/docs/3.0/using
+[part-resp]: https://developers.google.com/blogger/docs/3.0/performance#partial-response

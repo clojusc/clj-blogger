@@ -62,7 +62,7 @@
         :project {
           :name "clj-blogger"
           :description "Customised, Stasis-based Static Site Generator"}
-        :namespaces [#"^dragon\.(?!dev)"]
+        :namespaces [#"^clojusc\.blogger\.(?!dev)"]
         :themes [:clojang]
         :output-path "docs/current"
         :doc-paths ["resources/docs"]
