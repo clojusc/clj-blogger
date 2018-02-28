@@ -1,7 +1,10 @@
 (ns clojusc.blogger.api.core
   (:require
     [clojusc.blogger.api.impl.blog :as blog]
+    [clojusc.blogger.api.impl.comment :as comment]
+    [clojusc.blogger.api.impl.page :as page]
     [clojusc.blogger.api.impl.post :as post]
+    [clojusc.blogger.api.impl.user :as user]
     [clojusc.blogger.auth :as auth]
     [clojusc.blogger.util :as util]))
 
