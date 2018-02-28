@@ -10,7 +10,8 @@
    config-file
    creds-file
    defaults
-   token])
+   token
+   debug])
 
 (defprotocol BloggerAPI
   ;;---------------------;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

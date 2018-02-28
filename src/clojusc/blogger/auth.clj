@@ -4,9 +4,12 @@
     [cheshire.core :as json]
     [clj-http.client :as httpc]
     [clojure.string :as string]
+    [clojusc.blogger.request :as request]
     [clojusc.blogger.util :as util]))
 
-(def token-url "https://www.googleapis.com/oauth2/v4/token")
+(def oauth2-grant-type "urn:ietf:params:oauth:grant-type:jwt-bearer")
+(def oauth2-scope "https://www.googleapis.com/auth/blogger")
+(def token-endpoint "https://www.googleapis.com/oauth2/v4/token")
 
 (defn get-creds
   [client]
@@ -34,8 +37,8 @@
   (let [now (util/get-epoch-time)
         expire (+ now (* 59 60))]
     {:iss (:client_email creds)
-     :scope "https://www.googleapis.com/auth/blogger"
-     :aud "https://www.googleapis.com/oauth2/v4/token"
+     :scope oauth2-scope
+     :aud token-endpoint
      :exp expire
      :iat now}))
 
@@ -64,20 +67,26 @@
         signature (jwt-signature creds header claim-set)]
     (string/join "." [header claim-set signature])))
 
+(defn add-debug
+  [client opts]
+  (merge
+    (if (:debug client)
+      {:throw-entire-message? true
+       :debug true
+       :debug-body true}
+      {})
+    opts))
+
 (defn get-token
   [client]
   (let [creds (get-creds client)
-        grant-type "urn:ietf:params:oauth:grant-type:jwt-bearer"
         jwt (create-jwt creds)]
-    (->> {:form-params
-          {:grant_type grant-type
-           :assertion jwt}
-          ; :throw-entire-message? true
-          ; :debug true
-          ; :debug-body true
-          :as :json}
-         (httpc/post token-url)
-         :body
+    (->> {:as :json
+          :form-params
+           {:grant_type oauth2-grant-type
+            :assertion jwt}}
+         (add-debug client)
+         (request/post token-endpoint)
          :access_token)))
 
 (defn update-token
