@@ -27,14 +27,8 @@
          (routes/get-url this :blog-by-id args [:blog-id])
          (request/add-default-opts this args httpc-opts))))))
 
-(defn get-blogs
-  ([this]
-    (get-blogs this {}))
-  ([this args]
-    (get-blogs this args {}))
-  ([this args httpc-opts]
-    :not-implemented))
+;; Looking for get-blogs? see the `impl.user` namespace, since getting
+;; all blogs actually a function of the user.
 
 (def behaviour
-  {:get-blog get-blog
-   :get-blogs get-blogs})
+  {:get-blog get-blog})
