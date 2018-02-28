@@ -16,19 +16,31 @@
   ([this args]
     (get-blog this args {}))
   ([this args httpc-opts]
-    (let [args (util/get-args this args)]
-      (if (:url args)
+    (let [{:keys [blog-id url] :as args} (util/get-args this args)]
+      (if url
         (request/get
          (routes/get-url this :blog-by-url)
          (->> httpc-opts
               (request/add-default-opts this args)
               (request/add-query-items args [:url])))
         (request/get
-         (routes/get-url this :blog-by-id args [:blog-id])
+         (routes/get-url this :blog-by-id [blog-id])
          (request/add-default-opts this args httpc-opts))))))
 
 ;; Looking for get-blogs? see the `impl.user` namespace, since getting
 ;; all blogs actually a function of the user.
 
+(defn get-pageviews
+  ([this]
+    (get-pageviews this {}))
+  ([this args]
+    (get-pageviews this args {}))
+  ([this args httpc-opts]
+    (let [{blog-id :blog-id :as args} (util/get-args this args)]
+      (request/get
+       (routes/get-url this :blog-pageviews [blog-id])
+       (request/add-default-opts this args httpc-opts)))))
+
 (def behaviour
-  {:get-blog get-blog})
+  {:get-blog get-blog
+   :get-pageviews get-pageviews})
