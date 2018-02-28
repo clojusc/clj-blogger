@@ -16,7 +16,15 @@ was written against the following release of Blogger:
  * https://developers.google.com/blogger/docs/3.0/reference/
 
 
-## Google Authentication
+## Before Use
+
+There are a few things to be aware of before deciding to use this library:
+
+* Google Authentication
+* Configuration
+* Alpha Status
+
+### Google Authentication
 
 Because this library utilizes protected Google resources, you will need to
 [set up OAuth2 access with Google][oauth2-setup]; note that this library only
@@ -29,7 +37,7 @@ in JSON format -- do so. Save this to a file (e.g.,
 client (see below).
 
 
-## Configuration
+### Configuration
 
 Instead of remembering to enter your Google blog ID every time you want to
 publish content, you can create a JSON configuration file that contains an
@@ -42,6 +50,46 @@ config file as well, and they will be used on all appropriate requests.
 
 You can save this to a file like `~/.google/blog.json` and use it when
 creating a client (see below).
+
+
+### Alpha Status
+
+This is a brand-new library. I'm using it to publish updates to severl of my
+own blogs. As such, I've started with the API calls that I need the most.
+You mileage may vary. That being said, if there's something you'd like to
+see added, feel free to open a ticket or even submit a pull request :-)
+
+Here are the API functions that have been implemented:
+
+* `get-blog`
+
+These are the ones remaining:
+
+* `get-blogs`
+* `get-comment`
+* `get-comments`
+* `approve-comment`
+* `delete-comment`
+* `spam-comment`
+* `remove-comment-content`
+* `get-page`
+* `get-pages`
+* `add-page`
+* `delete-page`
+* `update-page`
+* `get-post`
+* `get-posts`
+* `search`
+* `add-post`
+* `delete-post`
+* `update-post`
+* `publish-post`
+* `unpublish-post`
+* `get-user`
+* `get-user-blog`
+* `get-pageviews`
+* `get-user-post`
+* `get-user-posts`
 
 
 ## Layout
@@ -58,29 +106,8 @@ protocol defined there are provided in sensible library namespaces under
 This is essentially a very thin wrapper around
 [clj-http](https://github.com/dakrone/clj-http): we don't do anything clever on
 top of it. Anything you'd normally pass to clj-http functions will work the
-same with clj-blogger. All that's wrapped by the Clojure library are the
-following:
- * the HTTP verb (which shows up in the Clojure API as a prefix to the function
-   name, e.g. `get-posts` or `delete-post`; an exception is made for the `POST`
-   HTTP verb: due to the contextual ambiguity, the `create-` prefix is used in this
-   case), and
- * the resource (URL).
-
-All clj-blogger functions take one to three arguments:
- 1. The client record (required)
- 1. A map of options specific to the given Blogger API resource (optional if these
-    have been provided in a configuration file), and
- 1. A map of options to pass to clj-http, allowing you complete control over
-    the HTTP client behaviour (optional).
-
-To create a new client:
-
-```clj
-(requre '[clojusc.blogger.api.core :as api])
-
-(def c (api/create-client {:creds-file "creds.json"
-                           :config-file "blog.json"}))
-```
+same with clj-blogger (in most cases, this will be the third argument to the
+functions in this API).
 
 
 ## Documentation
@@ -94,7 +121,15 @@ Versioned Clojure client documentation is available here:
 ## Usage
 
 From the above notes (and a quick look at the source code), it should be fairly
-clear how to use the API. First, create a client as indicated above, then:
+clear how to use the API. First, create a client:
+
+```clj
+(requre '[clojusc.blogger.api.core :as api])
+
+(def c (api/create-client {:creds-file "creds.json"
+                           :config-file "blog.json"}))
+```
+
 
 ```
 (api/get-blog c {:blog-id "2632822713760719202"})
