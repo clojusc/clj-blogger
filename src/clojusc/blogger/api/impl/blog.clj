@@ -21,11 +21,11 @@
         (request/get
          (routes/get-url this :blog-by-url)
          (->> httpc-opts
-              (request/add-default-opts this)
+              (request/add-default-opts this args)
               (request/add-query-items args [:url])))
         (request/get
          (routes/get-url this :blog-by-id args [:blog-id])
-         (request/add-default-opts this httpc-opts))))))
+         (request/add-default-opts this args httpc-opts))))))
 
 (defn get-blogs
   ([this]

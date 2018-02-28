@@ -6,6 +6,7 @@
 
 (def delete (comp :body #'httpc/delete))
 (def get (comp :body #'httpc/get))
+(def patch (comp :body #'httpc/patch))
 (def post (comp :body #'httpc/post))
 (def put (comp :body #'httpc/put))
 
@@ -27,8 +28,15 @@
                    :debug true
                    :debug-body true))
 
+(defn add-common-params
+  [args http-opts]
+  (if (:fields args)
+    (add-query-items args [:fields] http-opts)
+    http-opts))
+
 (defn add-default-opts
-  [client http-opts]
+  [client args http-opts]
   (->> http-opts
        (add-token client)
-       add-as-json))
+       add-as-json
+       (add-common-params args)))
