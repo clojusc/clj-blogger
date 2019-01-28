@@ -155,7 +155,7 @@ For instance, if you'd only like to see the titles of all posts:
 
 ## License
 
-Copyright © 2018, Clojure-Aided Enrichment Center
+Copyright © 2018-2019, Clojure-Aided Enrichment Center
 
 Distributed under the Apache License, Version 2.0.
 

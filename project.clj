@@ -21,10 +21,10 @@
     :name "Apache License, Version 2.0"
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [
-    [buddy/buddy-sign "2.2.0"]
-    [cheshire "5.8.0"]
-    [clj-http "3.7.0"]
-    [org.clojure/clojure "1.9.0"]]
+    [buddy/buddy-sign "3.0.0"]
+    [cheshire "5.8.1"]
+    [clj-http "3.9.1"]
+    [org.clojure/clojure "1.10.0"]]
   :profiles {
     :ubercompile {
       :aot :all}
@@ -40,10 +40,8 @@
         [org.clojure/tools.namespace "0.2.11"]]}
     :lint {
       :plugins [
-        [jonase/eastwood "0.2.5"]
-        [lein-bikeshed "0.5.1"]
-        [lein-kibit "0.1.6"]
-        [venantius/yagni "0.1.4"]]}
+        [jonase/eastwood "0.3.5"]
+        [lein-kibit "0.1.6"]]}
     :test {
       :dependencies [
         [clojusc/ltest "0.3.0"]]
@@ -56,7 +54,7 @@
       :dependencies [
         [clojang/codox-theme "0.2.0-SNAPSHOT"]]
       :plugins [
-        [lein-codox "0.10.3"]
+        [lein-codox "0.10.5"]
         [lein-marginalia "0.9.1"]]
       :codox {
         :project {
