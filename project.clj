@@ -24,7 +24,9 @@
     [buddy/buddy-sign "3.0.0"]
     [cheshire "5.8.1"]
     [clj-http "3.9.1"]
-    [org.clojure/clojure "1.10.0"]]
+    [org.clojure/clojure "1.10.0"]
+    [org.clojure/data.xml "0.2.0-alpha6"]
+    [tolitius/xml-in "0.1.0"]]
   :profiles {
     :ubercompile {
       :aot :all}
@@ -91,10 +93,10 @@
               "--name" "clj-blogger"]]
     "build" ["with-profile" "+test" "do"
       ;["check-deps"]
-      ["lint"]
-      ["docs"]
-      ["ubercompile"]
       ["clean"]
+      ["ubercompile"]
+      ["lint"]
       ["uberjar"]
       ["clean"]
-      ["ltest"]]})
+      ["ltest"]
+      ["docs"]]})
