@@ -5,6 +5,7 @@
     [clojure.data.zip.xml :as zip-xml]
     [clojure.instant :as instant]
     [clojure.java.io :as io]
+    [clojure.string :as string]
     [clojure.zip :as zip]
     [taoensso.timbre :as log])
   (:import
@@ -77,7 +78,6 @@
   (fn [loc]
     (predicate (zip-xml/text loc))))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;   XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -108,10 +108,23 @@
   [xml-zipped-data id]
   (xml-> xml-zipped-data [:entry (entry-id? id) zip/node]))
 
+(defn extract-x
+  [parsed-coll xml-tags func]
+  (log/debug "Extracting from xml-tags:" xml-tags)
+  (xml1-> (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))
+
+(defn extract-xs
+  [parsed-coll xml-tags func]
+  (log/debug "Extracting from xml-tags:" xml-tags)
+  (xml-> (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))
+
 (defn extract-tag-text
-  [parsed-coll & tags]
-  (log/debug "Extracting text from tags:" tags)
-  (xml1-> (apply zip/xml-zip parsed-coll) (conj (vec tags) zip-xml/text)))
+  [parsed-coll & xml-tags]
+  (extract-x parsed-coll xml-tags #'zip-xml/text))
+
+(defn extract-attrs
+  [parsed-coll & xml-tags]
+  (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags))))
 
 (defn extract-draft-bool
   [parsed-coll]
@@ -126,6 +139,19 @@
    :email (extract-tag-text parsed-coll :author :email)
    :uri (extract-tag-text parsed-coll :author :uri)})
 
+(defn- url?
+  [s]
+  (log/trace "Checking for url:" s)
+  (or (string/starts-with? s "http://")
+      (string/starts-with? s "https://")))
+
+(defn extract-tags
+  [parsed-coll]
+  (-> parsed-coll
+      (extract-attrs :category :term)
+      (#(remove url? %))
+      vec))
+
 (defn extract-entry
   [parsed-coll]
   (let [title (extract-tag-text parsed-coll :title)]
@@ -136,6 +162,7 @@
      :updated (instant/read-instant-date
                (extract-tag-text parsed-coll :updated))
      :author (extract-author parsed-coll)
+     :tags (extract-tags parsed-coll)
      :draft? (extract-draft-bool parsed-coll)
      :content (extract-tag-text parsed-coll :content)}))
 
