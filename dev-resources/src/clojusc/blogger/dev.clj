@@ -2,9 +2,12 @@
   (:require
     [cheshire.core :as json]
     [clj-http.client :as httpc]
+    [clojure.data.xml :as xml]
+    [clojure.data.zip.xml :as zip-xml]
     [clojure.java.io :as io]
     [clojure.string :as string]
     [clojure.tools.namespace.repl :refer [refresh]]
+    [clojure.zip :as zip]
     [clojusc.blogger.api.core :as api]
     [clojusc.blogger.api.impl.blog :as blog]
     [clojusc.blogger.api.impl.comment :as comment]
@@ -14,7 +17,11 @@
     [clojusc.blogger.auth :as auth]
     [clojusc.blogger.request :as request]
     [clojusc.blogger.routes :as routes]
-    [clojusc.blogger.util :as util]))
+    [clojusc.blogger.util :as util]
+    [clojusc.blogger.xml.parser.export :as export]
+    [clojusc.twig :as logger]))
+
+(logger/set-level! '[clojusc.blogger] :info)
 
 (def home (.get (System/getenv) "HOME"))
 (def config-dir (str home "/.google/starship-tools"))
@@ -30,3 +37,7 @@
     (api/create-client {:creds-file creds-file
                         :config-file config-file})
     (api/create-client)))
+
+(comment
+    (def x (export/xml-resource->zip "import/blog-01-22-2019.xml"))
+    )

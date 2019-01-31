@@ -24,9 +24,11 @@
     [buddy/buddy-sign "3.0.0"]
     [cheshire "5.8.1"]
     [clj-http "3.9.1"]
+    [clojusc/twig "0.4.1"]
+    [com.taoensso/timbre "4.10.0"]
     [org.clojure/clojure "1.10.0"]
     [org.clojure/data.xml "0.2.0-alpha6"]
-    [tolitius/xml-in "0.1.0"]]
+    [org.clojure/data.zip "0.1.2"]]
   :profiles {
     :ubercompile {
       :aot :all}
@@ -39,7 +41,9 @@
     :dev {
       :source-paths ["dev-resources/src"]
       :dependencies [
-        [org.clojure/tools.namespace "0.2.11"]]}
+        [org.clojure/tools.namespace "0.2.11"]]
+      :plugins [
+        [oubiwann/venantius-ultra "0.5.4-SNAPSHOT"]]}
     :lint {
       :plugins [
         [jonase/eastwood "0.3.5"]
