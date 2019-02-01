@@ -69,9 +69,20 @@
 (defn entry-id?
   [id]
   (fn [loc]
-    (let [current-id (xml1-> loc [:id zip-xml/text])]
-      (log/debug "Comparing " current-id " with " id " ... Equal? " (= current-id id))
-      (= current-id id))))
+    (let [current-id (xml1-> loc [:id zip-xml/text])
+          equal? (= current-id id)]
+      (log/debug "Comparing " current-id " with " id " ... Equal? " equal?)
+      equal?)))
+
+(defn post-url?
+  [title]
+  (fn [loc]
+    (let [current-link-href (xml1-> loc [(zip-xml/attr :href)])
+          current-link-title (xml1-> loc [(zip-xml/attr :title)])
+          equal? (= current-link-title title)]
+      (log/debug "Comparing " current-link-title " with " title " ... Equal? "
+                 equal?)
+      equal?)))
 
 (defn content
   [predicate]
@@ -152,6 +163,11 @@
       (#(remove url? %))
       vec))
 
+(defn extract-url
+  [parsed-coll title]
+  (xml1-> (apply zip/xml-zip parsed-coll)
+          [:link (post-url? title) (zip-xml/attr :href)]))
+
 (defn extract-entry
   [parsed-coll]
   (let [title (extract-tag-text parsed-coll :title)]
@@ -164,5 +180,6 @@
      :author (extract-author parsed-coll)
      :tags (extract-tags parsed-coll)
      :draft? (extract-draft-bool parsed-coll)
-     :content (extract-tag-text parsed-coll :content)}))
+     :content (extract-tag-text parsed-coll :content)
+     :url (extract-url parsed-coll title)}))
 
