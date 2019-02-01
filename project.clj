@@ -3,7 +3,8 @@
   (try
     (str
       (slurp "resources/text/banner.txt")
-      (slurp "resources/text/loading.txt"))
+      ; (slurp "resources/text/loading.txt")
+      )
     ;; If another project can't find the banner, just skip it;
     ;; this function is really only meant to be used by Dragon itself.
     (catch Exception _ "")))
