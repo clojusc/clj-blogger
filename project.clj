@@ -54,7 +54,7 @@
     :test {
       :plugins [
         [lein-ancient "0.6.15"]
-        [lein-ltest "0.3.0"]]
+        [lein-ltest "0.4.0-SNAPSHOT"]]
       :test-selectors {
         :select :select}}
     :docs {
