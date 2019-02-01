@@ -129,7 +129,7 @@
   (log/debug "Extracting from xml-tags:" xml-tags)
   (xml-> (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))
 
-(defn extract-tag-text
+(defn extract-xml-text
   [parsed-coll & xml-tags]
   (extract-x parsed-coll xml-tags #'zip-xml/text))
 
@@ -139,16 +139,17 @@
 
 (defn extract-draft-bool
   [parsed-coll]
-  (when-let [bool-str (xml1-> atom-app-ns
+  (if-let [bool-str (xml1-> atom-app-ns
                               (apply zip/xml-zip parsed-coll)
                               [:control :draft zip-xml/text])]
-    (= bool-str "yes")))
+    (= bool-str "yes")
+    false))
 
 (defn extract-author
   [parsed-coll]
-  {:name (extract-tag-text parsed-coll :author :name)
-   :email (extract-tag-text parsed-coll :author :email)
-   :uri (extract-tag-text parsed-coll :author :uri)})
+  {:name (extract-xml-text parsed-coll :author :name)
+   :email (extract-xml-text parsed-coll :author :email)
+   :uri (extract-xml-text parsed-coll :author :uri)})
 
 (defn- url?
   [s]
@@ -170,16 +171,16 @@
 
 (defn extract-entry
   [parsed-coll]
-  (let [title (extract-tag-text parsed-coll :title)]
-    {:id (extract-tag-text parsed-coll :id)
+  (let [title (extract-xml-text parsed-coll :title)]
+    {:id (extract-xml-text parsed-coll :id)
      :title title
      :published (instant/read-instant-date
-                 (extract-tag-text parsed-coll :published))
+                 (extract-xml-text parsed-coll :published))
      :updated (instant/read-instant-date
-               (extract-tag-text parsed-coll :updated))
+               (extract-xml-text parsed-coll :updated))
      :author (extract-author parsed-coll)
      :tags (extract-tags parsed-coll)
      :draft? (extract-draft-bool parsed-coll)
-     :content (extract-tag-text parsed-coll :content)
+     :content (extract-xml-text parsed-coll :content)
      :url (extract-url parsed-coll title)}))
 
