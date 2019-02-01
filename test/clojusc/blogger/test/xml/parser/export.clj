@@ -8,7 +8,7 @@
 
 (logger/set-level! '[clojusc.blogger] :fatal)
 
-(def sample-export "import/blog-01-22-2019.xml")
+(def sample-export "samples/export.xml")
 (def draft-post "tag:blogger.com,1999:blog-8825992.post-2878203379063759109")
 (def published-post "tag:blogger.com,1999:blog-8825992.post-2491940924950122045")
 (def blog-zip (export/xml-resource->zip sample-export))

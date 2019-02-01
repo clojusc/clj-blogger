@@ -42,7 +42,7 @@
 
 (defn xml-resource->zip
   [resource-file]
-  (xml->zip (io/file (io/resource resource-file))))
+  (xml->zip (io/resource resource-file)))
 
 (defn xml->
   ([data tags]
