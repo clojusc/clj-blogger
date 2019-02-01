@@ -2865,8 +2865,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>clj-blogger -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/clojusc/clj-blogger">clj-blogger</a></h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>A Clojure library for the Google Blogger REST API</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">buddy/buddy-sign</td><td class="dotted"><hr /></td><td class="dep-version">3.0.0</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.8.1</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">3.9.1</td></tr><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.10.0</td></tr><tr><td class="dep-name">org.clojure/data.xml</td><td class="dotted"><hr /></td><td class="dep-version">0.2.0-alpha6</td></tr><tr><td class="dep-name">tolitius/xml-in</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#clojusc.blogger.request">clojusc.blogger.request</a></li><li><a href="#clojusc.blogger.routes">clojusc.blogger.routes</a></li><li><a href="#clojusc.blogger.util">clojusc.blogger.util</a></li><li><a href="#clojusc.blogger.xml.parser.export">clojusc.blogger.xml.parser.export</a></li><li><a href="#clojusc.blogger.auth">clojusc.blogger.auth</a></li><li><a href="#clojusc.blogger.api.impl.blog">clojusc.blogger.api.impl.blog</a></li><li><a href="#clojusc.blogger.api.impl.comment">clojusc.blogger.api.impl.comment</a></li><li><a href="#clojusc.blogger.api.impl.page">clojusc.blogger.api.impl.page</a></li><li><a href="#clojusc.blogger.api.impl.post">clojusc.blogger.api.impl.post</a></li><li><a href="#clojusc.blogger.api.impl.user">clojusc.blogger.api.impl.user</a></li><li><a href="#clojusc.blogger.api.core">clojusc.blogger.api.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.request" name="clojusc.blogger.request"><h1 class="project-name">clojusc.blogger.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>clj-blogger -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/clojusc/clj-blogger">clj-blogger</a></h1><h2 class="project-version">0.2.0-SNAPSHOT</h2><br /><p>A Clojure library for the Google Blogger REST API</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">buddy/buddy-sign</td><td class="dotted"><hr /></td><td class="dep-version">3.0.0</td></tr><tr><td class="dep-name">cheshire</td><td class="dotted"><hr /></td><td class="dep-version">5.8.1</td></tr><tr><td class="dep-name">clj-http</td><td class="dotted"><hr /></td><td class="dep-version">3.9.1</td></tr><tr><td class="dep-name">clojusc/twig</td><td class="dotted"><hr /></td><td class="dep-version">0.4.1</td></tr><tr><td class="dep-name">com.taoensso/timbre</td><td class="dotted"><hr /></td><td class="dep-version">4.10.0</td></tr><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.10.0</td></tr><tr><td class="dep-name">org.clojure/data.xml</td><td class="dotted"><hr /></td><td class="dep-version">0.2.0-alpha6</td></tr><tr><td class="dep-name">org.clojure/data.zip</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#clojusc.blogger.request">clojusc.blogger.request</a></li><li><a href="#clojusc.blogger.routes">clojusc.blogger.routes</a></li><li><a href="#clojusc.blogger.util">clojusc.blogger.util</a></li><li><a href="#clojusc.blogger.xml.parser.export">clojusc.blogger.xml.parser.export</a></li><li><a href="#clojusc.blogger.auth">clojusc.blogger.auth</a></li><li><a href="#clojusc.blogger.api.impl.blog">clojusc.blogger.api.impl.blog</a></li><li><a href="#clojusc.blogger.api.impl.comment">clojusc.blogger.api.impl.comment</a></li><li><a href="#clojusc.blogger.api.impl.page">clojusc.blogger.api.impl.page</a></li><li><a href="#clojusc.blogger.api.impl.post">clojusc.blogger.api.impl.post</a></li><li><a href="#clojusc.blogger.api.impl.user">clojusc.blogger.api.impl.user</a></li><li><a href="#clojusc.blogger.api.core">clojusc.blogger.api.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.request" name="clojusc.blogger.request"><h1 class="project-name">clojusc.blogger.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.request
   (:require
     [cheshire.core :as json]
@@ -3018,11 +3018,155 @@ net.brehaut.ClojureTools = (function (SH) {
     (.generatePrivate key-factory key-spec)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn get-args
   [client args]
-  (merge (:defaults client) args))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.xml.parser.export" name="clojusc.blogger.xml.parser.export"><h1 class="project-name">clojusc.blogger.xml.parser.export</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (merge (:defaults client) args))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.xml.parser.export" name="clojusc.blogger.xml.parser.export"><h1 class="project-name">clojusc.blogger.xml.parser.export</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Functions for parsing XML export data from blogger.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.xml.parser.export
-	(:require
-		[clojure.data.xml :as xml]
-		[xml-in.core :as xml-in]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.auth" name="clojusc.blogger.auth"><h1 class="project-name">clojusc.blogger.auth</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (:require
+    [clojure.data.xml :as xml]
+    [clojure.data.zip.xml :as zip-xml]
+    [clojure.instant :as instant]
+    [clojure.java.io :as io]
+    [clojure.string :as string]
+    [clojure.zip :as zip]
+    [taoensso.timbre :as log])
+  (:import
+    (java.net URLEncoder)))</pre></td></tr><tr><td class="docs"><p>  Constants   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def atom-ns &quot;http://www.w3.org/2005/Atom&quot;)
+(def atom-app-ns &quot;http://purl.org/atom/app#&quot;)</pre></td></tr><tr><td class="docs"><p>  General Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn ns-tag
+  ([tag]
+    (ns-tag atom-ns tag))
+  ([xml-ns tag]
+    (if (keyword? tag)
+      (keyword
+        (format &quot;xmlns.%s/%s&quot;
+                (URLEncoder/encode (str xml-ns) &quot;UTF-8&quot;)
+                (URLEncoder/encode (name tag) &quot;UTF-8&quot;)))
+      tag)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn xml-&gt;zip
+  [input]
+  (-&gt; input
+      io/input-stream
+      xml/parse
+      zip/xml-zip))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn xml-resource-&gt;zip
+  [resource-file]
+  (xml-&gt;zip (io/resource resource-file)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn xml-&gt;
+  ([data tags]
+    (xml-&gt; atom-ns data tags))
+  ([xml-ns data tags]
+    (xml-&gt; #'zip-xml/xml-&gt; xml-ns data tags))
+  ([func xml-ns data tags]
+    (apply func (cons data (mapv #(ns-tag xml-ns %) tags)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn xml1-&gt;
+  ([data tags]
+    (xml1-&gt; atom-ns data tags))
+  ([xml-ns data tags]
+    (xml-&gt; #'zip-xml/xml1-&gt; xml-ns data tags)))</pre></td></tr><tr><td class="docs"><p>  Blogger Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn is-post?
+  [id]
+  (re-matches #&quot;tag:blogger.com.*\.post-.*&quot; id))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn entry-id?
+  [id]
+  (fn [loc]
+    (let [current-id (xml1-&gt; loc [:id zip-xml/text])
+          equal? (= current-id id)]
+      (log/debug &quot;Comparing &quot; current-id &quot; with &quot; id &quot; ... Equal? &quot; equal?)
+      equal?)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn post-url?
+  [title]
+  (fn [loc]
+    (let [current-link-href (xml1-&gt; loc [(zip-xml/attr :href)])
+          current-link-title (xml1-&gt; loc [(zip-xml/attr :title)])
+          equal? (= current-link-title title)]
+      (log/debug &quot;Comparing &quot; current-link-title &quot; with &quot; title &quot; ... Equal? &quot;
+                 equal?)
+      equal?)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn content
+  [predicate]
+  (fn [loc]
+    (predicate (zip-xml/text loc))))</pre></td></tr><tr><td class="docs"><p>  XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn print-entry-ids
+  [xml-zipped-data]
+  (doall
+    (for [id (xml-&gt; xml-zipped-data [:entry :id zip-xml/text])]
+      (println id)))
+  :ok)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn print-post-ids
+  [xml-zipped-data]
+  (doall
+    (for [id (xml-&gt; xml-zipped-data [:entry :id zip-xml/text])]
+      (when (is-post? id)
+        (println id))))
+  :ok)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn print-post-ids
+  [xml-zipped-data]
+  (doall
+    (for [id (xml-&gt; xml-zipped-data [:entry :id (content is-post?)])]
+      (println id)))
+  :ok)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-entry
+  [xml-zipped-data id]
+  (xml-&gt; xml-zipped-data [:entry (entry-id? id) zip/node]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-x
+  [parsed-coll xml-tags func]
+  (log/debug &quot;Extracting from xml-tags:&quot; xml-tags)
+  (xml1-&gt; (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-xs
+  [parsed-coll xml-tags func]
+  (log/debug &quot;Extracting from xml-tags:&quot; xml-tags)
+  (xml-&gt; (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-xml-text
+  [parsed-coll &amp; xml-tags]
+  (extract-x parsed-coll xml-tags #'zip-xml/text))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-attrs
+  [parsed-coll &amp; xml-tags]
+  (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-draft-bool
+  [parsed-coll]
+  (if-let [bool-str (xml1-&gt; atom-app-ns
+                              (apply zip/xml-zip parsed-coll)
+                              [:control :draft zip-xml/text])]
+    (= bool-str &quot;yes&quot;)
+    false))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-author
+  [parsed-coll]
+  {:name (extract-xml-text parsed-coll :author :name)
+   :email (extract-xml-text parsed-coll :author :email)
+   :uri (extract-xml-text parsed-coll :author :uri)})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- url?
+  [s]
+  (log/trace &quot;Checking for url:&quot; s)
+  (or (string/starts-with? s &quot;http://&quot;)
+      (string/starts-with? s &quot;https://&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-tags
+  [parsed-coll]
+  (-&gt; parsed-coll
+      (extract-attrs :category :term)
+      (#(remove url? %))
+      vec))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-url
+  [parsed-coll title]
+  (xml1-&gt; (apply zip/xml-zip parsed-coll)
+          [:link (post-url? title) (zip-xml/attr :href)]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-entry
+  [parsed-coll]
+  (let [title (extract-xml-text parsed-coll :title)]
+    {:id (extract-xml-text parsed-coll :id)
+     :title title
+     :published (instant/read-instant-date
+                 (extract-xml-text parsed-coll :published))
+     :updated (instant/read-instant-date
+               (extract-xml-text parsed-coll :updated))
+     :author (extract-author parsed-coll)
+     :tags (extract-tags parsed-coll)
+     :draft? (extract-draft-bool parsed-coll)
+     :content (extract-xml-text parsed-coll :content)
+     :url (extract-url parsed-coll title)}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.auth" name="clojusc.blogger.auth"><h1 class="project-name">clojusc.blogger.auth</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.auth
   (:require
     [buddy.sign.jws :as jws]
