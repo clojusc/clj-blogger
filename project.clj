@@ -49,8 +49,6 @@
         [jonase/eastwood "0.3.5"]
         [lein-kibit "0.1.6"]]}
     :test {
-      :dependencies [
-        [clojusc/ltest "0.3.0"]]
       :plugins [
         [lein-ancient "0.6.15"]
         [lein-ltest "0.3.0"]]
