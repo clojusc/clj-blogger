@@ -20,6 +20,9 @@
   :license {
     :name "Apache License, Version 2.0"
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
+  :exclusions [
+    [org.clojure/clojure]
+    [com.amazonaws/aws-java-sdk-s3]]
   :dependencies [
     [buddy/buddy-sign "3.0.0"]
     [cheshire "5.8.1"]
