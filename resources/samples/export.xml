@@ -1,0 +1,71 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:gd="http://schemas.google.com/g/2005" xmlns:georss="http://www.georss.org/georss" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/" xmlns:thr="http://purl.org/syndication/thread/1.0">
+  <!-- Blog metadata -->
+  <id>tag:blogger.com,1999:blog-8825992.archive</id>
+  <updated>2019-01-11T01:09:06.422-08:00</updated>
+  <title type="text">Electric Duncan</title>
+  <link href="https://www.blogger.com/feeds/8825992/archive" rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml"/>
+  <link href="https://www.blogger.com/feeds/8825992/archive" rel="self" type="application/atom+xml"/>
+  <link href="https://www.blogger.com/feeds/8825992/archive" rel="http://schemas.google.com/g/2005#post" type="application/atom+xml"/>
+  <link href="http://oubiwann.blogspot.com/" rel="alternate" type="text/html"/>
+  <author>
+    <name>Duncan McGreggor</name>
+    <email>noreply@blogger.com</email>
+    <gd:image height="35" rel="http://schemas.google.com/g/2005#thumbnail" src="//lh3.googleusercontent.com/zFdxGE77vvD2w5xHy6jkVuElKv-U9_9qLkRYK8OnbDeJPtjSZ82UPq5w6hJ-SA=s35" width="35"/>
+  </author>
+  <generator uri="https://www.blogger.com" version="7.00">Blogger</generator>
+  <!-- Draft entry -->
+  <entry>
+    <id>tag:blogger.com,1999:blog-8825992.post-2878203379063759109</id>
+    <published>2014-03-19T16:26:00.000-07:00</published>
+    <updated>2014-03-19T16:26:00.638-07:00</updated>
+    <app:control xmlns:app="http://purl.org/atom/app#">
+      <app:draft>yes</app:draft>
+    </app:control>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/blogger/2008/kind#post"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="erjang"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="erlang"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="lfe"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="clojure"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="jvm"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="lisp"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="java"/>
+    <title type="text">Hello, Clojure: LFE nuzzling up to the JVM</title>
+    <content type="html"/>
+    <link href="https://oubiwann.blogspot.com/2014/03/hello-clojure-lfe-nuzzling-up-to-jvm.html#comment-form" rel="replies" title="0 Comments" type="text/html"/>
+    <link href="https://www.blogger.com/feeds/8825992/posts/default/2878203379063759109" rel="edit" type="application/atom+xml"/>
+    <link href="https://www.blogger.com/feeds/8825992/posts/default/2878203379063759109" rel="self" type="application/atom+xml"/>
+    <author>
+      <name>Duncan McGreggor</name>
+      <uri>https://www.blogger.com/profile/05824242007299312223</uri>
+      <email>noreply@blogger.com</email>
+      <gd:image height="32" rel="http://schemas.google.com/g/2005#thumbnail" src="//1.bp.blogspot.com/-xHqIAYPMqkA/UzwrzzjLlxI/AAAAAAAAAMM/NSEjlvXfE70/s32/*" width="32"/>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <!-- Published entry -->
+  <entry>
+    <id>tag:blogger.com,1999:blog-8825992.post-2491940924950122045</id>
+    <published>2007-08-20T21:44:00.001-07:00</published>
+    <updated>2010-02-19T10:14:05.425-08:00</updated>
+    <category scheme="http://www.blogger.com/atom/ns#" term="ubuntu"/>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/blogger/2008/kind#post"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="apple"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="hardware"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="mac os x"/>
+    <category scheme="http://www.blogger.com/atom/ns#" term="canonical"/>
+    <title type="text">Ubuntu 7.04 on iMac Core 2 Duo, 2G</title>
+    <content type="html">Well, I busted me arse this afternoon and evening trying to get Ubuntu set up on my new iMac. It installed without issue (using the &quot;alternate&quot; x386 iso), but has the following critical issues:&lt;br /&gt;&lt;ol&gt;&lt;li&gt;No wireless&lt;/li&gt;&lt;li&gt;No widescreen support&lt;/li&gt;&lt;li&gt;No sound&lt;/li&gt;&lt;li&gt;Doesn't recognize CD/DVD drive after install and reboot&lt;/li&gt;&lt;/ol&gt;I'm kind of bummed, since I'd planned on doing dev work on this box (can we even call the iMacs &quot;boxes&quot;?) in native Ubuntu, and now I'll have to use parallels until the driver support is developed. Or until someone sends me a link that I've managed to miss despite incessant googling today...&lt;br /&gt;&lt;br /&gt;Once I'm moved into the new place, I'll have a GB switch in the office and will be able to work in Ubuntu over copper. The resolution bugs              me more than the lack of sound and DVD, but I can live with those for now. I guess.&lt;br /&gt;&lt;br /&gt;But, hey -- it plays WoW and UT2004 in OS X like a champ :-)&lt;br /&gt;&lt;!-- technorati tags start --&gt;&lt;p style=&quot;text-align:right;font-size:10px;&quot;&gt;Technorati Tags: &lt;a href=&quot;http://www.technorati.com/tag/apple&quot; rel=&quot;tag&quot;&gt;apple&lt;/a&gt;, &lt;a href=&quot;http://www.technorati.com/tag/ubuntu&quot; rel=&quot;tag&quot;&gt;ubuntu&lt;/a&gt;, &lt;a href=&quot;http://www.technorati.com/tag/mac%20os%20x&quot; rel=&quot;tag&quot;&gt;mac os x&lt;/a&gt;, &lt;a href=&quot;http://www.technorati.com/tag/linux&quot; rel=&quot;tag&quot;&gt;linux&lt;/a&gt;&lt;/p&gt;&lt;!-- technorati tags end --&gt;</content>
+    <link href="https://oubiwann.blogspot.com/feeds/2491940924950122045/comments/default" rel="replies" title="Post Comments" type="application/atom+xml"/>
+    <link href="https://oubiwann.blogspot.com/2007/08/ubuntu-704-on-imac-core-2-duo-2g.html#comment-form" rel="replies" title="1 Comments" type="text/html"/>
+    <link href="https://www.blogger.com/feeds/8825992/posts/default/2491940924950122045" rel="edit" type="application/atom+xml"/>
+    <link href="https://www.blogger.com/feeds/8825992/posts/default/2491940924950122045" rel="self" type="application/atom+xml"/>
+    <link href="https://oubiwann.blogspot.com/2007/08/ubuntu-704-on-imac-core-2-duo-2g.html" rel="alternate" title="Ubuntu 7.04 on iMac Core 2 Duo, 2G" type="text/html"/>
+    <author>
+      <name>Duncan McGreggor</name>
+      <uri>https://www.blogger.com/profile/17155270977759488515</uri>
+      <email>noreply@blogger.com</email>
+      <gd:image height="32" rel="http://schemas.google.com/g/2005#thumbnail" src="//3.bp.blogspot.com/-nrh0l1Wyg7E/TwH5bXx6isI/AAAAAAAAAGw/CdDWpfpYaGg/s32/duncan_in_redwood_crop_retouch_2.jpg" width="32"/>
+    </author>
+    <thr:total>1</thr:total>
+  </entry>
+</feed>
