@@ -4,7 +4,8 @@ script:
   - lein build
 jdk:
   - oraclejdk8
-  - oraclejdk7
+  - openjdk8
+  - openjdk11
 env:
   - LEIN_SNAPSHOTS_IN_RELEASE=true
 notifications:
