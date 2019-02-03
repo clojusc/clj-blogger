@@ -13,7 +13,7 @@
   [ns]
   (str "\u001B[35m[\u001B[34m"
        ns
-       "\u001B[35m]\u001B[33m λ\u001B[m=> "))
+       "\u001B[35m]\u001B[33m =>\u001B[m "))
 
 (defproject clj-blogger "0.2.0-SNAPSHOT"
   :description "A Clojure library for the Google Blogger REST API"

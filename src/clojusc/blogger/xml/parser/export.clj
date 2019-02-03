@@ -17,7 +17,8 @@
 
 (def atom-ns "http://www.w3.org/2005/Atom")
 (def atom-app-ns "http://purl.org/atom/app#")
-
+(def comment-attr "http://schemas.google.com/blogger/2008/kind#comment")
+(def post-attr "http://schemas.google.com/blogger/2008/kind#post")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;   General Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,9 +63,39 @@
 ;;;   Blogger Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn is-post?
+;; <category scheme="http://schemas.google.com/g/2005#kind"
+;;           term="http://schemas.google.com/blogger/2008/kind#comment"/>
+
+(defn post-id?
   [id]
   (re-matches #"tag:blogger.com.*\.post-.*" id))
+
+(defn term-comment?
+  [term]
+  (string/ends-with? term "comment"))
+
+; (defn tag-not=
+;   "Returns a query predicate that matches a node when its is a tag
+;   named tagname."
+;   [tagname]
+;   (fn [loc]
+;     (or (= tagname (:tag (zip/node loc)))
+;         (filter #(and (zip/branch? %) (= tagname (:tag (zip/node %))))
+;                 (zf/children-auto loc)))))
+
+(defn attr-not=
+  "Returns a query predicate that matches a node when it has an
+  attribute named attrname whose value is attrval."
+  [attrname attrval]
+  (fn [loc]
+    (not= attrval (zip-xml/attr loc attrname))))
+
+(defn post?
+  [_entry]
+  (fn [loc]
+    (let [good-id? (post-id? (xml1-> loc [:id zip-xml/text]))
+          comment? (term-comment? (xml1-> loc [:category (zip-xml/attr :term)]))]
+      (and good-id? (not comment?)))))
 
 (defn entry-id?
   [id]
@@ -89,10 +120,23 @@
   (fn [loc]
     (predicate (zip-xml/text loc))))
 
+(defn content-filter
+  [predicate]
+  (fn [loc]
+    (when (predicate (zip-xml/text loc))
+      loc)))
+
+(defn check-node
+  [predicate]
+  (fn [loc]
+    (predicate (zip/node loc))))
+
 (defn process
-  [xml-zipped-data selectors processor-fn]
-  (for [id (xml-> xml-zipped-data selectors)]
-    (processor-fn id)))
+  ([xml-zipped-data selectors]
+    (process xml-zipped-data selectors identity))
+  ([xml-zipped-data selectors processor-fn]
+    (for [id (xml-> xml-zipped-data selectors)]
+      (processor-fn id))))
 
 (defn process!
   [xml-zipped-data selectors processor-fn]
@@ -104,17 +148,31 @@
 ;;;   XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def post-selector
+  [:entry
+   :category
+   (zip-xml/attr= :term post-attr)
+   zip/up
+   :entry
+   :id])
+
+(def posts-ids-selector
+  (conj post-selector (content post-id?)))
+
+(def posts-selector
+  (conj post-selector (content-filter post-id?) zip/up zip/node))
+
 (defn print-entry-ids
   [xml-zipped-data]
   (process! xml-zipped-data [:entry :id zip-xml/text] println))
 
 (defn print-post-ids
   [xml-zipped-data]
-  (process! xml-zipped-data [:entry :id (content is-post?)] println))
+  (process! xml-zipped-data posts-ids-selector println))
 
 (defn get-post-ids
   [xml-zipped-data]
-  (process xml-zipped-data [:entry :id (content is-post?)] identity))
+  (process xml-zipped-data posts-ids-selector))
 
 (defn get-entry
   [xml-zipped-data id]
@@ -122,9 +180,7 @@
 
 (defn get-posts
   [xml-zipped-data]
-  (process xml-zipped-data
-           [:entry :id (content is-post?)]
-           #(get-entry xml-zipped-data %)))
+  (process xml-zipped-data posts-selector))
 
 (defn extract-x
   [parsed-coll xml-tags func]
@@ -201,5 +257,5 @@
 (defn extract-posts
   [xml-zipped-data]
   (process xml-zipped-data
-           [:entry :id (content is-post?)]
-           (comp extract-post #(get-entry xml-zipped-data %))))
+           posts-selector
+           (comp extract-post vector)))

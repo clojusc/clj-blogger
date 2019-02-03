@@ -77,4 +77,41 @@
     </author>
     <thr:total>1</thr:total>
   </entry>
+  <!-- Comment -->
+  <entry>
+    <id>tag:blogger.com,1999:blog-8825992.post-5645822316286599375</id>
+    <published>2016-02-13T15:43:54.954-08:00</published>
+    <updated>2017-08-09T22:18:50.172-07:00</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/blogger/2008/kind#comment"/>
+    <title type="text">Very cool post - many thanks. I am a scientific Py...</title>
+    <content type="html">Very cool post - many thanks. I am a scientific Python user and wanting to learn Elixir, and this bridge between the two makes me more confident in my choice. </content>
+    <link href="https://www.blogger.com/feeds/8825992/3602344279714623756/comments/default/5645822316286599375" rel="edit" type="application/atom+xml"/>
+    <link href="https://www.blogger.com/feeds/8825992/3602344279714623756/comments/default/5645822316286599375" rel="self" type="application/atom+xml"/>
+    <link href="http://oubiwann.blogspot.com/2015/01/scientific-computing-and-joy-of.html?showComment=1455407034954#c5645822316286599375" rel="alternate" title="" type="text/html"/>
+    <author>
+      <name>Thomas Browne</name>
+      <uri>https://www.blogger.com/profile/10820415784213991087</uri>
+      <email>noreply@blogger.com</email>
+      <gd:image height="32" rel="http://schemas.google.com/g/2005#thumbnail" src="//lh6.googleusercontent.com/-BhjDxt7Amv0/AAAAAAAAAAI/AAAAAAAABEw/HaNmL5G-T4M/s32-c/photo.jpg" width="32"/>
+    </author>
+    <thr:in-reply-to href="https://oubiwann.blogspot.com/2015/01/scientific-computing-and-joy-of.html" ref="tag:blogger.com,1999:blog-8825992.post-3602344279714623756" source="https://www.blogger.com/feeds/8825992/posts/default/3602344279714623756" type="text/html"/>
+    <gd:extendedProperty name="blogger.itemClass" value="pid-1240510428"/>
+    <gd:extendedProperty name="blogger.displayTime" value="3:43 PM"/>
+  </entry>
+  <!-- Post entry with bad id -->
+  <entry>
+    <id>tag:blogger.com,1999:blog-8825992.pust-12345</id>
+    <published>2007-08-20T21:44:00.001-07:00</published>
+    <updated>2010-02-19T10:14:05.425-08:00</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/blogger/2008/kind#post"/>
+    <title type="text"></title>
+    <content type="html"></content>
+    <author>
+      <name>Duncan McGreggor</name>
+      <uri>https://www.blogger.com/profile/17155270977759488515</uri>
+      <email>noreply@blogger.com</email>
+      <gd:image height="32" rel="http://schemas.google.com/g/2005#thumbnail" src="//3.bp.blogspot.com/-nrh0l1Wyg7E/TwH5bXx6isI/AAAAAAAAAGw/CdDWpfpYaGg/s32/duncan_in_redwood_crop_retouch_2.jpg" width="32"/>
+    </author>
+    <thr:total>1</thr:total>
+  </entry>
 </feed>

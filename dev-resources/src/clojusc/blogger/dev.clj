@@ -4,6 +4,7 @@
     [clj-http.client :as httpc]
     [clojure.data.xml :as xml]
     [clojure.data.zip.xml :as zip-xml]
+    [clojure.data.zip :as data-zip]
     [clojure.java.io :as io]
     [clojure.string :as string]
     [clojure.tools.namespace.repl :refer [refresh]]
