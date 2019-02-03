@@ -27,7 +27,7 @@
   ([tag]
     (ns-tag atom-ns tag))
   ([xml-ns tag]
-    (if (keyword? tag)
+    (if (and xml-ns (keyword? tag))
       (keyword
         (format "xmlns.%s/%s"
                 (URLEncoder/encode (str xml-ns) "UTF-8")
@@ -63,39 +63,9 @@
 ;;;   Blogger Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; <category scheme="http://schemas.google.com/g/2005#kind"
-;;           term="http://schemas.google.com/blogger/2008/kind#comment"/>
-
 (defn post-id?
   [id]
   (re-matches #"tag:blogger.com.*\.post-.*" id))
-
-(defn term-comment?
-  [term]
-  (string/ends-with? term "comment"))
-
-; (defn tag-not=
-;   "Returns a query predicate that matches a node when its is a tag
-;   named tagname."
-;   [tagname]
-;   (fn [loc]
-;     (or (= tagname (:tag (zip/node loc)))
-;         (filter #(and (zip/branch? %) (= tagname (:tag (zip/node %))))
-;                 (zf/children-auto loc)))))
-
-(defn attr-not=
-  "Returns a query predicate that matches a node when it has an
-  attribute named attrname whose value is attrval."
-  [attrname attrval]
-  (fn [loc]
-    (not= attrval (zip-xml/attr loc attrname))))
-
-(defn post?
-  [_entry]
-  (fn [loc]
-    (let [good-id? (post-id? (xml1-> loc [:id zip-xml/text]))
-          comment? (term-comment? (xml1-> loc [:category (zip-xml/attr :term)]))]
-      (and good-id? (not comment?)))))
 
 (defn entry-id?
   [id]

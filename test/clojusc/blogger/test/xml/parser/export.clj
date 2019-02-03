@@ -18,21 +18,18 @@
 (def non-existant-id "tag:blogger.com,1999:blog-8825992.post-1234567898765432123")
 (def blog-zip (export/xml-resource->zip sample-export))
 
+(deftest ns-tag
+  (is (= :xmlns.http%3A%2F%2Fwww.w3.org%2F2005%2FAtom/thing
+         (export/ns-tag :thing)))
+  (is (= :xmlns.http%3A%2F%2Fpurl.org%2Fatom%2Fapp%23/thing
+         (export/ns-tag export/atom-app-ns :thing)))
+  (is (= :thing
+         (export/ns-tag nil :thing))))
+
 (deftest post-id?
   (is (= [true true false true]
          (mapv (comp not nil? export/post-id?)
                [draft-post-id published-post-id non-post-id non-existant-id]))))
-
-(deftest term-comment?
-  (is (export/term-comment? "http://schemas.google.com/blogger/2008/kind#comment"))
-  (is (not
-        (export/term-comment? "http://schemas.google.com/blogger/2008/kind#template"))))
-
-(deftest atom-ns
-  (is (= :xmlns.http%3A%2F%2Fwww.w3.org%2F2005%2FAtom/thing
-         (export/ns-tag :thing)))
-  (is (= :xmlns.http%3A%2F%2Fpurl.org%2Fatom%2Fapp%23/thing
-         (export/ns-tag export/atom-app-ns :thing))))
 
 (deftest extract-xml-text
   (let [blog-post (export/get-entry blog-zip published-post-id)]
