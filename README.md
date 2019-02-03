@@ -34,22 +34,41 @@ browser into the mix).
 Once created, there will be an option to download your OAuth2 credential data
 in JSON format -- do so. Save this to a file (e.g.,
 `~/.google/blog-publisher-oauth2-creds.json`); you will use it when creating a
-client (see below).
+client (see below). This file will look something like this:
+
+```json
+{
+  "type": "service_account",
+  "project_id": "blog-id-you-created",
+  "private_key_id": "123abc...",
+  "private_key": "-----BEGIN PRIVATE KEY----- ... ",
+  "client_email": "google-blog-updates@blog-id-you-created.iam.gserviceaccount.com",
+  "client_id": "12345...",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-blog-updates%40blog-id-you-created.iam.gserviceaccount.com"
+}
+```
 
 
 ### Configuration
 
 Instead of remembering to enter your Google blog ID every time you want to
 publish content, you can create a JSON configuration file that contains an
-associative array with the key `blog-id` and whose value is the blog ID of
-the blog with which you want to work.
+associative array with the key `blog-id` and associated value that is the
+blog ID of the blog with which you want to work.
 
 Note that if you will be repeatedly operating on Blogger resources with the
 same `user-id`, `page-id`, or `post-id`, you may make those entries in the
 config file as well, and they will be used on all appropriate requests.
 
 You can save this to a file like `~/.google/blog.json` and use it when
-creating a client (see below).
+creating a client (see below). This file will look something like this:
+
+```json
+{"blog-id": "12345"}
+```
 
 
 ### Alpha Status
@@ -59,11 +78,33 @@ own blogs. As such, I've started with the API calls that I need the most.
 You mileage may vary. That being said, if there's something you'd like to
 see added, feel free to open a ticket or even submit a pull request :-)
 
+#### Supported API Calls
+
 Here are the API functions that have been implemented:
 
 * `get-blog`
 * `get-pageviews`
 * `get-posts`
+
+
+#### Supported Utility functions
+
+Processing previously exported Blogger data with
+`clojusc.blogger.xml.parser.export`:
+
+* `print-entry-ids` - display the ids for all exported data with the `<entry>` XML tag (posts, comments, layout, the blog itself, etc.)
+* `print-post-ids` - display just the ids for the `<entry>` elements whose ids match the Blogger post id format
+* `get-post-ids` - same as above, but returns a lazy sequence of post ids instead of printing them
+* `get-entry` - given 1) XML data that has been processed by `clojure.zip/xml-zip` and 2) a Blogger `<entry>` id, get the entry and all it's child XML nodes; returns a parsed collection that may be used by any of the `extract-*` utility functions
+* `get-posts` - given XML data that has been processed by `clojure.zip/xml-zip`, returns a lazy sequence of parsed XML entries of blog posts
+* `extract-xml-text`, `extract-attrs`, `extract-draft-bool`, `extract-author`, `extract-tags`, `extract-url`, `extract-post` - given a parsed collection (e.g., as returned by `get-entry`) and potentially additional parameters, extract the desired data. In the cases of `extract-author` and `extract-post`, a hash-map is returned that represents the node's children; all others return just the data itself.
+* `extract-posts` - given XML data that has been processed by `clojure.zip/xml-zip`, return a lazy sequence of blog post hash-map data
+
+For example usage, see the unit tests in the `clojusc.blogger.test.xml.parser.export`
+namespace.
+
+
+#### Unsupported API Calls
 
 These are the ones remaining:
 
@@ -126,19 +167,19 @@ clear how to use the API. First, create a client:
 ```clj
 (requre '[clojusc.blogger.api.core :as api])
 
-(def c (api/create-client {:creds-file "creds.json"
+(def c (api/create-client {:creds-file "blog-publisher-oauth2-creds.json"
                            :config-file "blog.json"}))
 ```
 
 
 ```clj
-(api/get-blog c {:blog-id "2632822713760719202"})
+(api/get-blog c {:blog-id "12345"})
 ```
 
 You can also pass options to clj-http:
 
 ```clj
-(api/get-blog c {:blog-id "2632822713760719202"} {:debug true})
+(api/get-blog c {:blog-id "12345"} {:debug true})
 ```
 
 
