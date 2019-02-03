@@ -19,6 +19,9 @@
 (def atom-app-ns "http://purl.org/atom/app#")
 (def comment-attr "http://schemas.google.com/blogger/2008/kind#comment")
 (def post-attr "http://schemas.google.com/blogger/2008/kind#post")
+
+(def ^{:dynamic true} *default-ns* atom-ns)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;   General Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34,6 +37,18 @@
                 (URLEncoder/encode (name tag) "UTF-8")))
       tag)))
 
+(defn disable-xml-ns!
+  []
+  (alter-var-root #'*default-ns* (constantly nil)))
+
+(defn enable-xml-ns!
+  []
+  (alter-var-root #'*default-ns* (constantly atom-ns)))
+
+(defn nil-xml-ns?
+  []
+  (nil? *default-ns*))
+
 (defn xml->zip
   [input]
   (-> input
@@ -47,7 +62,7 @@
 
 (defn xml->
   ([data tags]
-    (xml-> atom-ns data tags))
+    (xml-> *default-ns* data tags))
   ([xml-ns data tags]
     (xml-> #'zip-xml/xml-> xml-ns data tags))
   ([func xml-ns data tags]
@@ -55,7 +70,7 @@
 
 (defn xml1->
   ([data tags]
-    (xml1-> atom-ns data tags))
+    (xml1-> *default-ns* data tags))
   ([xml-ns data tags]
     (xml-> #'zip-xml/xml1-> xml-ns data tags)))
 
@@ -175,9 +190,9 @@
 (defn extract-draft-bool
   [parsed-coll]
   (when (seq parsed-coll)
-    (if-let [bool-str (xml1-> atom-app-ns
-                                (apply zip/xml-zip parsed-coll)
-                                [:control :draft zip-xml/text])]
+    (if-let [bool-str (xml1-> (when-not (nil-xml-ns?) atom-app-ns)
+                              (apply zip/xml-zip parsed-coll)
+                              [:control :draft zip-xml/text])]
       (= bool-str "yes")
       false)))
 
