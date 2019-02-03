@@ -89,35 +89,42 @@
   (fn [loc]
     (predicate (zip-xml/text loc))))
 
+(defn process
+  [xml-zipped-data selectors processor-fn]
+  (for [id (xml-> xml-zipped-data selectors)]
+    (processor-fn id)))
+
+(defn process!
+  [xml-zipped-data selectors processor-fn]
+  (dorun
+    (process xml-zipped-data selectors processor-fn))
+  :ok)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;   XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn print-entry-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-> xml-zipped-data [:entry :id zip-xml/text])]
-      (println id)))
-  :ok)
+  (process! xml-zipped-data [:entry :id zip-xml/text] println))
 
 (defn print-post-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-> xml-zipped-data [:entry :id zip-xml/text])]
-      (when (is-post? id)
-        (println id))))
-  :ok)
+  (process! xml-zipped-data [:entry :id (content is-post?)] println))
 
-(defn print-post-ids
+(defn get-post-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-> xml-zipped-data [:entry :id (content is-post?)])]
-      (println id)))
-  :ok)
+  (process xml-zipped-data [:entry :id (content is-post?)] identity))
 
 (defn get-entry
   [xml-zipped-data id]
   (xml-> xml-zipped-data [:entry (entry-id? id) zip/node]))
+
+(defn get-posts
+  [xml-zipped-data]
+  (process xml-zipped-data
+           [:entry :id (content is-post?)]
+           #(get-entry xml-zipped-data %)))
 
 (defn extract-x
   [parsed-coll xml-tags func]
@@ -131,25 +138,29 @@
 
 (defn extract-xml-text
   [parsed-coll & xml-tags]
-  (extract-x parsed-coll xml-tags #'zip-xml/text))
+  (when (and (seq parsed-coll) (seq xml-tags))
+    (extract-x parsed-coll xml-tags #'zip-xml/text)))
 
 (defn extract-attrs
   [parsed-coll & xml-tags]
-  (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags))))
+  (when (and (seq parsed-coll) (seq xml-tags))
+    (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags)))))
 
 (defn extract-draft-bool
   [parsed-coll]
-  (if-let [bool-str (xml1-> atom-app-ns
-                              (apply zip/xml-zip parsed-coll)
-                              [:control :draft zip-xml/text])]
-    (= bool-str "yes")
-    false))
+  (when (seq parsed-coll)
+    (if-let [bool-str (xml1-> atom-app-ns
+                                (apply zip/xml-zip parsed-coll)
+                                [:control :draft zip-xml/text])]
+      (= bool-str "yes")
+      false)))
 
 (defn extract-author
   [parsed-coll]
-  {:name (extract-xml-text parsed-coll :author :name)
-   :email (extract-xml-text parsed-coll :author :email)
-   :uri (extract-xml-text parsed-coll :author :uri)})
+  (when (seq parsed-coll)
+    {:name (extract-xml-text parsed-coll :author :name)
+     :email (extract-xml-text parsed-coll :author :email)
+     :uri (extract-xml-text parsed-coll :author :uri)}))
 
 (defn- url?
   [s]
@@ -159,28 +170,36 @@
 
 (defn extract-tags
   [parsed-coll]
-  (-> parsed-coll
-      (extract-attrs :category :term)
-      (#(remove url? %))
-      vec))
+  (when (seq parsed-coll)
+    (-> parsed-coll
+        (extract-attrs :category :term)
+        (#(remove url? %))
+        vec)))
 
 (defn extract-url
   [parsed-coll title]
-  (xml1-> (apply zip/xml-zip parsed-coll)
-          [:link (post-url? title) (zip-xml/attr :href)]))
+  (when (seq parsed-coll)
+    (xml1-> (apply zip/xml-zip parsed-coll)
+            [:link (post-url? title) (zip-xml/attr :href)])))
 
-(defn extract-entry
+(defn extract-post
   [parsed-coll]
-  (let [title (extract-xml-text parsed-coll :title)]
-    {:id (extract-xml-text parsed-coll :id)
-     :title title
-     :published (instant/read-instant-date
-                 (extract-xml-text parsed-coll :published))
-     :updated (instant/read-instant-date
-               (extract-xml-text parsed-coll :updated))
-     :author (extract-author parsed-coll)
-     :tags (extract-tags parsed-coll)
-     :draft? (extract-draft-bool parsed-coll)
-     :content (extract-xml-text parsed-coll :content)
-     :url (extract-url parsed-coll title)}))
+  (when (seq parsed-coll)
+    (let [title (extract-xml-text parsed-coll :title)]
+      {:id (extract-xml-text parsed-coll :id)
+       :title title
+       :published (instant/read-instant-date
+                   (extract-xml-text parsed-coll :published))
+       :updated (instant/read-instant-date
+                 (extract-xml-text parsed-coll :updated))
+       :author (extract-author parsed-coll)
+       :tags (extract-tags parsed-coll)
+       :draft? (extract-draft-bool parsed-coll)
+       :content (extract-xml-text parsed-coll :content)
+       :url (extract-url parsed-coll title)})))
 
+(defn extract-posts
+  [xml-zipped-data]
+  (process xml-zipped-data
+           [:entry :id (content is-post?)]
+           (comp extract-post #(get-entry xml-zipped-data %))))

@@ -42,6 +42,15 @@
     </author>
     <thr:total>0</thr:total>
   </entry>
+  <!-- Layout entry -->
+  <entry>
+    <id>tag:blogger.com,1999:blog-8825992.layout</id>
+    <published>2006-12-27T06:05:09.912-08:00</published>
+    <updated>2019-01-11T01:09:06.422-08:00</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/blogger/2008/kind#template"/>
+    <title type="text">Template: Electric Duncan</title>
+    <content type="text">...</content>
+  </entry>
   <!-- Published entry -->
   <entry>
     <id>tag:blogger.com,1999:blog-8825992.post-2491940924950122045</id>
