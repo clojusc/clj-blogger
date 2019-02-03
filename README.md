@@ -54,7 +54,7 @@ creating a client (see below).
 
 ### Alpha Status
 
-This is a brand-new library. I'm using it to publish updates to severl of my
+This is a brand-new library. I'm using it to publish updates to several of my
 own blogs. As such, I've started with the API calls that I need the most.
 You mileage may vary. That being said, if there's something you'd like to
 see added, feel free to open a ticket or even submit a pull request :-)
