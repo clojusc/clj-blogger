@@ -15,7 +15,7 @@
        ns
        "\u001B[35m]\u001B[33m =>\u001B[m "))
 
-(defproject clj-blogger "0.2.0-SNAPSHOT"
+(defproject clj-blogger "0.2.0"
   :description "A Clojure library for the Google Blogger REST API"
   :url "https://github.com/clojusc/clj-blogger"
   :license {
