@@ -3032,18 +3032,30 @@ net.brehaut.ClojureTools = (function (SH) {
     (java.net URLEncoder)))</pre></td></tr><tr><td class="docs"><p>  Constants   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def atom-ns &quot;http://www.w3.org/2005/Atom&quot;)
-(def atom-app-ns &quot;http://purl.org/atom/app#&quot;)</pre></td></tr><tr><td class="docs"><p>  General Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+(def atom-app-ns &quot;http://purl.org/atom/app#&quot;)
+(def comment-attr &quot;http://schemas.google.com/blogger/2008/kind#comment&quot;)
+(def post-attr &quot;http://schemas.google.com/blogger/2008/kind#post&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true} *default-ns* atom-ns)</pre></td></tr><tr><td class="docs"><p>  General Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn ns-tag
   ([tag]
     (ns-tag atom-ns tag))
   ([xml-ns tag]
-    (if (keyword? tag)
+    (if (and xml-ns (keyword? tag))
       (keyword
         (format &quot;xmlns.%s/%s&quot;
                 (URLEncoder/encode (str xml-ns) &quot;UTF-8&quot;)
                 (URLEncoder/encode (name tag) &quot;UTF-8&quot;)))
       tag)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn disable-xml-ns!
+  []
+  (alter-var-root #'*default-ns* (constantly nil)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn enable-xml-ns!
+  []
+  (alter-var-root #'*default-ns* (constantly atom-ns)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn nil-xml-ns?
+  []
+  (nil? *default-ns*))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn xml-&gt;zip
   [input]
   (-&gt; input
@@ -3055,18 +3067,18 @@ net.brehaut.ClojureTools = (function (SH) {
   (xml-&gt;zip (io/resource resource-file)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn xml-&gt;
   ([data tags]
-    (xml-&gt; atom-ns data tags))
+    (xml-&gt; *default-ns* data tags))
   ([xml-ns data tags]
     (xml-&gt; #'zip-xml/xml-&gt; xml-ns data tags))
   ([func xml-ns data tags]
     (apply func (cons data (mapv #(ns-tag xml-ns %) tags)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn xml1-&gt;
   ([data tags]
-    (xml1-&gt; atom-ns data tags))
+    (xml1-&gt; *default-ns* data tags))
   ([xml-ns data tags]
     (xml-&gt; #'zip-xml/xml1-&gt; xml-ns data tags)))</pre></td></tr><tr><td class="docs"><p>  Blogger Utility Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn is-post?
+</td><td class="codes"><pre class="brush: clojure">(defn post-id?
   [id]
   (re-matches #&quot;tag:blogger.com.*\.post-.*&quot; id))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn entry-id?
@@ -3088,30 +3100,54 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn content
   [predicate]
   (fn [loc]
-    (predicate (zip-xml/text loc))))</pre></td></tr><tr><td class="docs"><p>  XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
+    (predicate (zip-xml/text loc))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn content-filter
+  [predicate]
+  (fn [loc]
+    (when (predicate (zip-xml/text loc))
+      loc)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn check-node
+  [predicate]
+  (fn [loc]
+    (predicate (zip/node loc))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn process
+  ([xml-zipped-data selectors]
+    (process xml-zipped-data selectors identity))
+  ([xml-zipped-data selectors processor-fn]
+    (for [id (xml-&gt; xml-zipped-data selectors)]
+      (processor-fn id))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn process!
+  [xml-zipped-data selectors processor-fn]
+  (dorun
+    (process xml-zipped-data selectors processor-fn))
+  :ok)</pre></td></tr><tr><td class="docs"><p>  XML Query Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def post-selector
+  [:entry
+   :category
+   (zip-xml/attr= :term post-attr)
+   zip/up
+   :entry
+   :id])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def posts-ids-selector
+  (conj post-selector (content post-id?)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def posts-selector
+  (conj post-selector (content-filter post-id?) zip/up zip/node))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn print-entry-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-&gt; xml-zipped-data [:entry :id zip-xml/text])]
-      (println id)))
-  :ok)</pre></td></tr><tr><td class="docs">
+  (process! xml-zipped-data [:entry :id zip-xml/text] println))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn print-post-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-&gt; xml-zipped-data [:entry :id zip-xml/text])]
-      (when (is-post? id)
-        (println id))))
-  :ok)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn print-post-ids
+  (process! xml-zipped-data posts-ids-selector println))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-post-ids
   [xml-zipped-data]
-  (doall
-    (for [id (xml-&gt; xml-zipped-data [:entry :id (content is-post?)])]
-      (println id)))
-  :ok)</pre></td></tr><tr><td class="docs">
+  (process xml-zipped-data posts-ids-selector))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn get-entry
   [xml-zipped-data id]
   (xml-&gt; xml-zipped-data [:entry (entry-id? id) zip/node]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-posts
+  [xml-zipped-data]
+  (process xml-zipped-data posts-selector))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-x
   [parsed-coll xml-tags func]
   (log/debug &quot;Extracting from xml-tags:&quot; xml-tags)
@@ -3122,22 +3158,26 @@ net.brehaut.ClojureTools = (function (SH) {
   (xml-&gt; (apply zip/xml-zip parsed-coll) (conj (vec xml-tags) func)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-xml-text
   [parsed-coll &amp; xml-tags]
-  (extract-x parsed-coll xml-tags #'zip-xml/text))</pre></td></tr><tr><td class="docs">
+  (when (and (seq parsed-coll) (seq xml-tags))
+    (extract-x parsed-coll xml-tags #'zip-xml/text)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-attrs
   [parsed-coll &amp; xml-tags]
-  (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags))))</pre></td></tr><tr><td class="docs">
+  (when (and (seq parsed-coll) (seq xml-tags))
+    (extract-xs parsed-coll (butlast xml-tags) (zip-xml/attr (last xml-tags)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-draft-bool
   [parsed-coll]
-  (if-let [bool-str (xml1-&gt; atom-app-ns
+  (when (seq parsed-coll)
+    (if-let [bool-str (xml1-&gt; (when-not (nil-xml-ns?) atom-app-ns)
                               (apply zip/xml-zip parsed-coll)
                               [:control :draft zip-xml/text])]
-    (= bool-str &quot;yes&quot;)
-    false))</pre></td></tr><tr><td class="docs">
+      (= bool-str &quot;yes&quot;)
+      false)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-author
   [parsed-coll]
-  {:name (extract-xml-text parsed-coll :author :name)
-   :email (extract-xml-text parsed-coll :author :email)
-   :uri (extract-xml-text parsed-coll :author :uri)})</pre></td></tr><tr><td class="docs">
+  (when (seq parsed-coll)
+    {:name (extract-xml-text parsed-coll :author :name)
+     :email (extract-xml-text parsed-coll :author :email)
+     :uri (extract-xml-text parsed-coll :author :uri)}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- url?
   [s]
   (log/trace &quot;Checking for url:&quot; s)
@@ -3145,28 +3185,36 @@ net.brehaut.ClojureTools = (function (SH) {
       (string/starts-with? s &quot;https://&quot;)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-tags
   [parsed-coll]
-  (-&gt; parsed-coll
-      (extract-attrs :category :term)
-      (#(remove url? %))
-      vec))</pre></td></tr><tr><td class="docs">
+  (when (seq parsed-coll)
+    (-&gt; parsed-coll
+        (extract-attrs :category :term)
+        (#(remove url? %))
+        vec)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn extract-url
   [parsed-coll title]
-  (xml1-&gt; (apply zip/xml-zip parsed-coll)
-          [:link (post-url? title) (zip-xml/attr :href)]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn extract-entry
+  (when (seq parsed-coll)
+    (xml1-&gt; (apply zip/xml-zip parsed-coll)
+            [:link (post-url? title) (zip-xml/attr :href)])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-post
   [parsed-coll]
-  (let [title (extract-xml-text parsed-coll :title)]
-    {:id (extract-xml-text parsed-coll :id)
-     :title title
-     :published (instant/read-instant-date
-                 (extract-xml-text parsed-coll :published))
-     :updated (instant/read-instant-date
-               (extract-xml-text parsed-coll :updated))
-     :author (extract-author parsed-coll)
-     :tags (extract-tags parsed-coll)
-     :draft? (extract-draft-bool parsed-coll)
-     :content (extract-xml-text parsed-coll :content)
-     :url (extract-url parsed-coll title)}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.auth" name="clojusc.blogger.auth"><h1 class="project-name">clojusc.blogger.auth</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (when (seq parsed-coll)
+    (let [title (extract-xml-text parsed-coll :title)]
+      {:id (extract-xml-text parsed-coll :id)
+       :title title
+       :published (instant/read-instant-timestamp
+                   (extract-xml-text parsed-coll :published))
+       :updated (instant/read-instant-timestamp
+                 (extract-xml-text parsed-coll :updated))
+       :author (extract-author parsed-coll)
+       :tags (extract-tags parsed-coll)
+       :draft? (extract-draft-bool parsed-coll)
+       :content (extract-xml-text parsed-coll :content)
+       :url (extract-url parsed-coll title)})))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn extract-posts
+  [xml-zipped-data]
+  (process xml-zipped-data
+           posts-selector
+           (comp extract-post vector)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#clojusc.blogger.auth" name="clojusc.blogger.auth"><h1 class="project-name">clojusc.blogger.auth</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns clojusc.blogger.auth
   (:require
     [buddy.sign.jws :as jws]
