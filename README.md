@@ -211,8 +211,8 @@ Distributed under the Apache License, Version 2.0.
 [logo-large]: resources/images/Blogger-logo.png
 [tag-badge]: https://img.shields.io/github/tag/clojusc/clj-blogger.svg
 [tag]: https://github.com/clojusc/clj-blogger/tags
-[clojure-v]: https://img.shields.io/badge/clojure-1.8.0-blue.svg
-[jdk-v]: https://img.shields.io/badge/jdk-1.7+-blue.svg
+[clojure-v]: https://img.shields.io/badge/clojure-1.10.0-blue.svg
+[jdk-v]: https://img.shields.io/badge/jdk-1.8+-blue.svg
 [clojars]: https://clojars.org/clj-blogger
 [clojars-badge]: https://img.shields.io/clojars/v/clj-blogger.svg
 [api-docs]: http://clojusc.github.io/clj-blogger/current/
