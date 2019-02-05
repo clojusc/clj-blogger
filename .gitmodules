@@ -1,0 +1,4 @@
+[submodule "docs"]
+	path = docs
+	url = git@github.com:clojusc/clj-blogger.git
+	branch = gh-pages
