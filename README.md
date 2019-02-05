@@ -75,7 +75,7 @@ creating a client (see below). This file will look something like this:
 
 This is a brand-new library. I'm using it to publish updates to several of my
 own blogs. As such, I've started with the API calls that I need the most.
-You mileage may vary. That being said, if there's something you'd like to
+Your mileage may vary. That being said, if there's something you'd like to
 see added, feel free to open a ticket or even submit a pull request :-)
 
 #### Supported API Calls
@@ -89,7 +89,7 @@ Here are the API functions that have been implemented:
 
 #### Supported Utility functions
 
-Processing previously exported Blogger data with
+Processing previously exported Blogger XML data with
 `clojusc.blogger.xml.parser.export`:
 
 * `print-entry-ids` - display the ids for all exported data with the `<entry>` XML tag (posts, comments, layout, the blog itself, etc.)
