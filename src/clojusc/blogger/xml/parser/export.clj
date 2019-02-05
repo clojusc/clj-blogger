@@ -229,9 +229,9 @@
     (let [title (extract-xml-text parsed-coll :title)]
       {:id (extract-xml-text parsed-coll :id)
        :title title
-       :published (instant/read-instant-date
+       :published (instant/read-instant-timestamp
                    (extract-xml-text parsed-coll :published))
-       :updated (instant/read-instant-date
+       :updated (instant/read-instant-timestamp
                  (extract-xml-text parsed-coll :updated))
        :author (extract-author parsed-coll)
        :tags (extract-tags parsed-coll)
